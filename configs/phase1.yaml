@@ -1,0 +1,19 @@
+﻿data_dir: data
+results_dir: results
+log_dir: logs
+seed: 42
+ingestion:
+  max_duration_s: 300
+  min_duration_s: 1.0
+  audio_sample_rate: 16000
+  force_cfr: true
+  vfr_tolerance: 0.02
+  random_frame_checks: 20
+  black_frame_mean: 8.0
+  max_bad_frame_fraction: 0.1
+  x264_crf: 18
+  x264_preset: veryfast
+gates:
+  frame_count_rel_diff: 0.01
+  audio_video_diff_s: 0.1
+  decode_errors: 0

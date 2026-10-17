@@ -1,0 +1,20 @@
+
+phase6:
+  model_name: "ViT-B-32"
+  pretrained: "laion2b_s34b_b79k"
+  device: "cpu"
+  batch_size: 8
+  max_text_tokens: 77
+
+  # Candidate frames and transcript inputs
+  shots_template: "data/shots/{video_id}.json"
+  subtitles_template: "data/subtitles/{video_id}.json"
+  frames_dir_template: "data/frames/{video_id}"
+
+  # Output artifacts
+  image_embeddings_template: "data/embeddings/clip_img_{video_id}.npy"
+  text_embeddings_template: "data/embeddings/clip_txt_{video_id}.npy"
+  alignment_template: "data/alignment/{video_id}.json"
+
+  # Low similarity is a warning, not a definitive classification
+  non_visual_similarity_threshold: 0.18

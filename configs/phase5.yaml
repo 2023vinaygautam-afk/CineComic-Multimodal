@@ -1,0 +1,11 @@
+phase5:
+  detection:
+    model_name: buffalo_l
+    model_root: null
+    det_size: [320, 320]
+    use_gpu: false
+    det_fps: 2
+    window_pad_s: 0.5
+    min_face_px: 40
+    min_det_score: 0.5
+    ref_px: 112

@@ -1,0 +1,83 @@
+# Phase 1 + Phase 2 + Phase 3 settings
+# Every threshold lives here; nothing is hard-coded in src/.
+
+data_dir: data
+results_dir: results
+log_dir: logs
+seed: 42
+
+ingestion:
+  max_duration_s: 300
+  min_duration_s: 1.0
+  audio_sample_rate: 16000
+  force_cfr: true
+  vfr_tolerance: 0.02
+  random_frame_checks: 20
+  black_frame_mean: 8.0
+  max_bad_frame_fraction: 0.1
+  x264_crf: 18
+  x264_preset: veryfast
+
+gates:
+  frame_count_rel_diff: 0.01
+  audio_video_diff_s: 0.1
+  decode_errors: 0
+
+asr:
+  backend: faster-whisper
+  model_size: small
+  language: en
+  device: auto
+  compute_type: auto
+  vad_filter: true
+  beam_size: 5
+  condition_on_previous_text: false
+
+  max_no_speech_prob: 0.6
+  min_avg_logprob: -1.0
+
+  hallucination_phrases:
+    - thanks for watching
+    - thank you for watching
+    - please subscribe
+    - subtitles by
+    - amara.org
+    - like and subscribe
+
+  max_words: 12
+  max_duration_s: 4.0
+  split_gap_s: 0.8
+  min_duration_s: 0.5
+  merge_gap_s: 0.5
+  merge_max_words: 16
+
+  timestamp_match_min_ratio: 0.5
+  nonspeech_overlap_ratio: 0.5
+
+asr_gates:
+  wer_max: 0.15
+  start_mae_s_max: 0.5
+  hallucination_rate_max: 0.05
+
+diar:
+  backend: pyannote
+  model: pyannote/speaker-diarization-3.1
+  hf_token_env: HF_TOKEN
+  device: auto
+
+  min_speakers: null
+  max_speakers: null
+
+  merge_gap_s: 0.3
+  min_turn_s: 0.3
+
+  min_overlap_ratio: 0.5
+  mixed_second_ratio: 0.3
+
+  collar_s: 0.25
+  der_step_s: 0.01
+  use_pyannote_metrics: true
+
+diar_gates:
+  der_max: 0.25
+  attribution_acc_min: 0.80
