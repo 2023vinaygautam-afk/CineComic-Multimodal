@@ -77,6 +77,21 @@ def test_low_confidence_detection_is_ignored():
     assert tracker.finish() == []
 
 
+def test_update_omits_embedding_from_output():
+    tracker = FaceTracker()
+
+    detection = make_detection(
+        [10, 10, 80, 80],
+        [1.0, 0.0, 0.0],
+    )
+
+    result = tracker.update("shot_1", 0.0, [detection])
+
+    assert len(result) == 1
+    assert "embedding" not in result[0]
+    assert result[0]["track_id"]
+
+
 def test_invalid_detection_is_ignored():
     tracker = FaceTracker()
 

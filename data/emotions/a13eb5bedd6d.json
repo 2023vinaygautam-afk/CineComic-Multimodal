@@ -41,33 +41,33 @@
       },
       "face": {
         "label": "sadness",
-        "p": 0.6295,
+        "p": 0.5932,
         "probs": {
-          "anger": 0.0246,
-          "disgust": 0.0036,
-          "fear": 0.0172,
-          "joy": 0.0526,
-          "neutral": 0.26,
-          "sadness": 0.6295,
-          "surprise": 0.0125
+          "anger": 0.0288,
+          "disgust": 0.0,
+          "fear": 0.0178,
+          "joy": 0.0517,
+          "neutral": 0.3042,
+          "sadness": 0.5932,
+          "surprise": 0.0043
         }
       },
       "fused": {
         "label": "neutral",
-        "conf": 0.4802,
+        "conf": 0.4913,
         "modalities": [
           "text",
           "audio",
           "face"
         ],
         "probs": {
-          "anger": 0.1006,
-          "disgust": 0.0146,
-          "fear": 0.0126,
-          "joy": 0.0819,
-          "neutral": 0.4802,
-          "sadness": 0.288,
-          "surprise": 0.0222
+          "anger": 0.1016,
+          "disgust": 0.0137,
+          "fear": 0.0127,
+          "joy": 0.0816,
+          "neutral": 0.4913,
+          "sadness": 0.2789,
+          "surprise": 0.0201
         }
       }
     },
@@ -103,33 +103,33 @@
       },
       "face": {
         "label": "sadness",
-        "p": 0.5003,
+        "p": 0.4173,
         "probs": {
-          "anger": 0.0686,
+          "anger": 0.0613,
           "disgust": 0.0,
-          "fear": 0.0879,
-          "joy": 0.0765,
-          "neutral": 0.2316,
-          "sadness": 0.5003,
-          "surprise": 0.035
+          "fear": 0.047,
+          "joy": 0.0403,
+          "neutral": 0.3755,
+          "sadness": 0.4173,
+          "surprise": 0.0586
         }
       },
       "fused": {
         "label": "anger",
-        "conf": 0.2943,
+        "conf": 0.2925,
         "modalities": [
           "text",
           "audio",
           "face"
         ],
         "probs": {
-          "anger": 0.2943,
+          "anger": 0.2925,
           "disgust": 0.0048,
-          "fear": 0.0364,
-          "joy": 0.1999,
-          "neutral": 0.1733,
-          "sadness": 0.1875,
-          "surprise": 0.1039
+          "fear": 0.0261,
+          "joy": 0.1908,
+          "neutral": 0.2093,
+          "sadness": 0.1667,
+          "surprise": 0.1098
         }
       }
     },
@@ -165,20 +165,20 @@
       },
       "face": {
         "label": "neutral",
-        "p": 0.5261,
+        "p": 0.5032,
         "probs": {
           "anger": 0.0,
-          "disgust": 0.0026,
-          "fear": 0.0041,
-          "joy": 0.4355,
-          "neutral": 0.5261,
-          "sadness": 0.0218,
-          "surprise": 0.0099
+          "disgust": 0.0,
+          "fear": 0.0071,
+          "joy": 0.4522,
+          "neutral": 0.5032,
+          "sadness": 0.0265,
+          "surprise": 0.0108
         }
       },
       "fused": {
         "label": "neutral",
-        "conf": 0.544,
+        "conf": 0.5383,
         "modalities": [
           "text",
           "audio",
@@ -186,12 +186,12 @@
         ],
         "probs": {
           "anger": 0.0469,
-          "disgust": 0.0061,
-          "fear": 0.0026,
-          "joy": 0.3606,
-          "neutral": 0.544,
-          "sadness": 0.0272,
-          "surprise": 0.0126
+          "disgust": 0.0055,
+          "fear": 0.0034,
+          "joy": 0.3648,
+          "neutral": 0.5383,
+          "sadness": 0.0284,
+          "surprise": 0.0128
         }
       }
     },
@@ -227,20 +227,20 @@
       },
       "face": {
         "label": "joy",
-        "p": 0.5711,
+        "p": 0.5631,
         "probs": {
           "anger": 0.0,
-          "disgust": 0.0032,
-          "fear": 0.0033,
-          "joy": 0.5711,
-          "neutral": 0.397,
-          "sadness": 0.0165,
-          "surprise": 0.009
+          "disgust": 0.0,
+          "fear": 0.0073,
+          "joy": 0.5631,
+          "neutral": 0.4064,
+          "sadness": 0.0144,
+          "surprise": 0.0087
         }
       },
       "fused": {
         "label": "surprise",
-        "conf": 0.3051,
+        "conf": 0.305,
         "modalities": [
           "text",
           "audio",
@@ -248,12 +248,12 @@
         ],
         "probs": {
           "anger": 0.0905,
-          "disgust": 0.0286,
-          "fear": 0.0055,
-          "joy": 0.1598,
-          "neutral": 0.1234,
-          "sadness": 0.2872,
-          "surprise": 0.3051
+          "disgust": 0.0278,
+          "fear": 0.0065,
+          "joy": 0.1578,
+          "neutral": 0.1258,
+          "sadness": 0.2867,
+          "surprise": 0.305
         }
       }
     },
@@ -288,33 +288,33 @@
         }
       },
       "face": {
-        "label": "sadness",
-        "p": 0.3664,
+        "label": "neutral",
+        "p": 0.451,
         "probs": {
-          "anger": 0.0384,
+          "anger": 0.051,
           "disgust": 0.0,
-          "fear": 0.0367,
-          "joy": 0.2259,
-          "neutral": 0.3326,
-          "sadness": 0.3664,
+          "fear": 0.0232,
+          "joy": 0.2783,
+          "neutral": 0.451,
+          "sadness": 0.1965,
           "surprise": 0.0
         }
       },
       "fused": {
         "label": "neutral",
-        "conf": 0.3621,
+        "conf": 0.3917,
         "modalities": [
           "text",
           "audio",
           "face"
         ],
         "probs": {
-          "anger": 0.1788,
+          "anger": 0.182,
           "disgust": 0.0197,
-          "fear": 0.0171,
-          "joy": 0.2501,
-          "neutral": 0.3621,
-          "sadness": 0.1637,
+          "fear": 0.0137,
+          "joy": 0.2632,
+          "neutral": 0.3917,
+          "sadness": 0.1212,
           "surprise": 0.0085
         }
       }
@@ -351,33 +351,33 @@
       },
       "face": {
         "label": "sadness",
-        "p": 0.4306,
+        "p": 0.5748,
         "probs": {
-          "anger": 0.019,
+          "anger": 0.0294,
           "disgust": 0.0,
-          "fear": 0.0297,
-          "joy": 0.2097,
-          "neutral": 0.2897,
-          "sadness": 0.4306,
-          "surprise": 0.0212
+          "fear": 0.0274,
+          "joy": 0.1067,
+          "neutral": 0.2618,
+          "sadness": 0.5748,
+          "surprise": 0.0
         }
       },
       "fused": {
         "label": "neutral",
-        "conf": 0.5029,
+        "conf": 0.4959,
         "modalities": [
           "text",
           "audio",
           "face"
         ],
         "probs": {
-          "anger": 0.0385,
+          "anger": 0.0411,
           "disgust": 0.0053,
-          "fear": 0.0113,
-          "joy": 0.1138,
-          "neutral": 0.5029,
-          "sadness": 0.3145,
-          "surprise": 0.0137
+          "fear": 0.0107,
+          "joy": 0.088,
+          "neutral": 0.4959,
+          "sadness": 0.3505,
+          "surprise": 0.0084
         }
       }
     },
@@ -413,33 +413,33 @@
       },
       "face": {
         "label": "sadness",
-        "p": 0.2897,
+        "p": 0.3957,
         "probs": {
-          "anger": 0.1702,
+          "anger": 0.1717,
           "disgust": 0.0,
-          "fear": 0.1026,
-          "joy": 0.2467,
-          "neutral": 0.0511,
-          "sadness": 0.2897,
-          "surprise": 0.1398
+          "fear": 0.1644,
+          "joy": 0.1401,
+          "neutral": 0.1281,
+          "sadness": 0.3957,
+          "surprise": 0.0
         }
       },
       "fused": {
         "label": "neutral",
-        "conf": 0.7228,
+        "conf": 0.742,
         "modalities": [
           "text",
           "audio",
           "face"
         ],
         "probs": {
-          "anger": 0.0481,
+          "anger": 0.0485,
           "disgust": 0.0052,
-          "fear": 0.0275,
-          "joy": 0.0689,
-          "neutral": 0.7228,
-          "sadness": 0.0835,
-          "surprise": 0.0441
+          "fear": 0.0429,
+          "joy": 0.0422,
+          "neutral": 0.742,
+          "sadness": 0.11,
+          "surprise": 0.0091
         }
       }
     },
@@ -475,33 +475,33 @@
       },
       "face": {
         "label": "sadness",
-        "p": 0.6325,
+        "p": 0.6017,
         "probs": {
-          "anger": 0.0294,
+          "anger": 0.0,
           "disgust": 0.0,
-          "fear": 0.065,
-          "joy": 0.0385,
-          "neutral": 0.0099,
-          "sadness": 0.6325,
-          "surprise": 0.2246
+          "fear": 0.0624,
+          "joy": 0.0298,
+          "neutral": 0.0284,
+          "sadness": 0.6017,
+          "surprise": 0.2778
         }
       },
       "fused": {
         "label": "anger",
-        "conf": 0.4599,
+        "conf": 0.4526,
         "modalities": [
           "text",
           "audio",
           "face"
         ],
         "probs": {
-          "anger": 0.4599,
+          "anger": 0.4526,
           "disgust": 0.0046,
-          "fear": 0.0265,
-          "joy": 0.2196,
-          "neutral": 0.0162,
-          "sadness": 0.2166,
-          "surprise": 0.0566
+          "fear": 0.0258,
+          "joy": 0.2174,
+          "neutral": 0.0208,
+          "sadness": 0.2088,
+          "surprise": 0.0698
         }
       }
     },
@@ -634,37 +634,37 @@
         }
       },
       "face": {
-        "label": "neutral",
-        "p": 0.4305,
+        "label": "sadness",
+        "p": 0.3432,
         "probs": {
-          "anger": 0.2422,
+          "anger": 0.2263,
           "disgust": 0.0,
-          "fear": 0.015,
-          "joy": 0.062,
-          "neutral": 0.4305,
-          "sadness": 0.2446,
-          "surprise": 0.0057
+          "fear": 0.0325,
+          "joy": 0.0599,
+          "neutral": 0.338,
+          "sadness": 0.3432,
+          "surprise": 0.0
         }
       },
       "fused": {
         "label": "joy",
-        "conf": 0.3723,
+        "conf": 0.3718,
         "modalities": [
           "text",
           "audio",
           "face"
         ],
         "probs": {
-          "anger": 0.2779,
+          "anger": 0.2739,
           "disgust": 0.0006,
-          "fear": 0.0043,
-          "joy": 0.3723,
-          "neutral": 0.2043,
-          "sadness": 0.0646,
-          "surprise": 0.076
+          "fear": 0.0087,
+          "joy": 0.3718,
+          "neutral": 0.1812,
+          "sadness": 0.0893,
+          "surprise": 0.0746
         }
       }
     }
   ],
-  "created": "2026-10-22 13:24:05"
+  "created": "2026-11-04 10:16:22"
 }

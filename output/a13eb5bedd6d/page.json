@@ -37,7 +37,7 @@
               "segment_id": "1",
               "start": 8.21,
               "end": 11.43,
-              "emotion_confidence": 0.4802,
+              "emotion_confidence": 0.4913,
               "speaker_id": "SPEAKER_00",
               "character_id": "CHAR_02",
               "speaker_confidence": 0.0
@@ -74,7 +74,7 @@
               "segment_id": "3",
               "start": 66.59,
               "end": 67.15,
-              "emotion_confidence": 0.544,
+              "emotion_confidence": 0.5383,
               "speaker_id": "SPEAKER_02",
               "character_id": "CHAR_02",
               "speaker_confidence": 0.0
@@ -103,7 +103,7 @@
                 "rescuing you of course"
               ],
               "font_size": 20,
-              "speaker_label": "CHAR_04",
+              "speaker_label": "CHAR_07",
               "emotion": "neutral",
               "text_overflow": false,
               "attributed": true,
@@ -111,9 +111,9 @@
               "segment_id": "5",
               "start": 69.39,
               "end": 70.55,
-              "emotion_confidence": 0.3621,
+              "emotion_confidence": 0.3917,
               "speaker_id": "SPEAKER_02",
-              "character_id": "CHAR_04",
+              "character_id": "CHAR_07",
               "speaker_confidence": 0.0
             }
           ]
@@ -140,7 +140,7 @@
                 "Now come on get your trunk"
               ],
               "font_size": 20,
-              "speaker_label": "CHAR_04",
+              "speaker_label": "CHAR_07",
               "emotion": "neutral",
               "text_overflow": false,
               "attributed": true,
@@ -148,9 +148,9 @@
               "segment_id": "6",
               "start": 70.55,
               "end": 72.69,
-              "emotion_confidence": 0.5029,
+              "emotion_confidence": 0.4959,
               "speaker_id": "SPEAKER_02",
-              "character_id": "CHAR_04",
+              "character_id": "CHAR_07",
               "speaker_confidence": 0.0
             }
           ]

@@ -16,15 +16,15 @@
     "sadness": 0,
     "surprise": 1
   },
-  "mean_fused_confidence": 0.4686,
-  "min_fused_confidence": 0.2943,
-  "max_fused_confidence": 0.7228,
+  "mean_fused_confidence": 0.472,
+  "min_fused_confidence": 0.2925,
+  "max_fused_confidence": 0.742,
   "ground_truth_evaluated": false,
   "stage": "emotion",
   "video_id": "a13eb5bedd6d",
-  "runtime_s": 13.432,
+  "runtime_s": 138.92,
   "passed": true,
   "reason": "Structure OK: coverage=1.00, mean_conf=0.47",
-  "cfg": "6a9dcaef",
+  "cfg": "fc849b08",
   "python": "3.11.9"
 }

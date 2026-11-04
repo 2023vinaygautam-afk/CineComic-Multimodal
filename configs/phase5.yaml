@@ -1,7 +1,7 @@
 phase5:
   detection:
     model_name: buffalo_l
-    model_root: null
+    model_root: .insightface
     det_size: [640, 640]
     use_gpu: false
     det_fps: 2

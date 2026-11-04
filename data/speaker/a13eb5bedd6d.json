@@ -847,7 +847,7 @@
       ]
     }
   ],
-  "runtime_seconds": 1.698,
+  "runtime_seconds": 1.791,
   "ground_truth_evaluated": false,
   "limitations": [
     "Mouth-region motion is a heuristic, not lip-reading.",

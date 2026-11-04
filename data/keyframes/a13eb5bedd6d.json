@@ -18,12 +18,12 @@
       "group_id": "dialogue:2:1",
       "scores": {
         "sem": 0.9327,
-        "spk": 0.6991,
+        "spk": 0.6856,
         "q": 0.1658,
         "sal": 0.1855,
         "motion": 0.1766,
         "div": 1.0,
-        "total": 0.6529
+        "total": 0.6495
       },
       "branch": "dialogue",
       "order": 1
@@ -36,19 +36,19 @@
       "segment_ids": [
         "3"
       ],
-      "character_id": "CHAR_04",
+      "character_id": "CHAR_07",
       "speaker_ids": [
         "SPEAKER_02"
       ],
       "group_id": "dialogue:15:3",
       "scores": {
         "sem": 0.9691,
-        "spk": 0.8758,
+        "spk": 0.8841,
         "q": 0.1651,
         "sal": 0.3296,
         "motion": 0.0784,
         "div": 1.0,
-        "total": 0.7241
+        "total": 0.7262
       },
       "branch": "dialogue",
       "order": 2
@@ -61,7 +61,7 @@
       "segment_ids": [
         "5"
       ],
-      "character_id": "CHAR_04",
+      "character_id": "CHAR_07",
       "speaker_ids": [
         "SPEAKER_02"
       ],
@@ -86,7 +86,7 @@
       "segment_ids": [
         "6"
       ],
-      "character_id": "CHAR_04",
+      "character_id": "CHAR_07",
       "speaker_ids": [
         "SPEAKER_02"
       ],
@@ -689,7 +689,7 @@
       ],
       "character_ids": [
         "CHAR_02",
-        "CHAR_04"
+        "CHAR_07"
       ],
       "quota": 1
     },
@@ -731,7 +731,7 @@
       ],
       "character_ids": [
         "CHAR_02",
-        "CHAR_04"
+        "CHAR_07"
       ],
       "quota": 1
     },
@@ -746,7 +746,7 @@
         "6"
       ],
       "character_ids": [
-        "CHAR_04"
+        "CHAR_07"
       ],
       "quota": 1
     },
@@ -761,7 +761,7 @@
         "6"
       ],
       "character_ids": [
-        "CHAR_04"
+        "CHAR_07"
       ],
       "quota": 1
     },
@@ -786,7 +786,9 @@
       "segment_ids": [
         "9"
       ],
-      "character_ids": [],
+      "character_ids": [
+        "CHAR_11"
+      ],
       "quota": 1
     },
     {

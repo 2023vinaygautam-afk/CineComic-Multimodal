@@ -13,9 +13,9 @@
   "ground_truth": false,
   "stage": "diarization",
   "video_id": "a13eb5bedd6d",
-  "runtime_s": 0.062,
+  "runtime_s": 0.048,
   "passed": true,
   "reason": "structure OK; no ground truth file (DER/attribution not evaluated)",
-  "cfg": "5e211db3",
+  "cfg": "6cd838f2",
   "python": "3.11.9"
 }

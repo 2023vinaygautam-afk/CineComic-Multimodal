@@ -474,7 +474,11 @@ class FaceTracker:
 
             # Do not expose embedding arrays in the returned
             # frame-level detections unless downstream code needs them.
-            output_detection = dict(detection)
+            output_detection = {
+                key: value
+                for key, value in detection.items()
+                if key != "embedding"
+            }
             output_detection["bbox"] = [
                 float(value) for value in detection["bbox"]
             ]

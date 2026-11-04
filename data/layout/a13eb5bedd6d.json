@@ -118,7 +118,7 @@
           "timestamp": 66.066,
           "source_image": "data\\frames\\a13eb5bedd6d\\shot_015\\s15_f001.jpg",
           "panel_image": "data\\layout\\a13eb5bedd6d\\panels\\panel_0002.jpg",
-          "character_id": "CHAR_04",
+          "character_id": "CHAR_07",
           "crop": [
             0,
             0,
@@ -220,7 +220,7 @@
           "timestamp": 69.444,
           "source_image": "data\\frames\\a13eb5bedd6d\\shot_017\\s17_f001.jpg",
           "panel_image": "data\\layout\\a13eb5bedd6d\\panels\\panel_0003.jpg",
-          "character_id": "CHAR_04",
+          "character_id": "CHAR_07",
           "crop": [
             0,
             0,
@@ -322,7 +322,7 @@
           "timestamp": 71.446,
           "source_image": "data\\frames\\a13eb5bedd6d\\shot_017\\s17_f005.jpg",
           "panel_image": "data\\layout\\a13eb5bedd6d\\panels\\panel_0004.jpg",
-          "character_id": "CHAR_04",
+          "character_id": "CHAR_07",
           "crop": [
             0,
             0,

@@ -21,5 +21,5 @@
   "source_rotation": 0,
   "source_decode_errors": 0,
   "time_convention": "seconds (float) from start of CFR video; frame = round(t*fps)",
-  "created": "2026-11-03T21:45:31"
+  "created": "2026-11-04T10:12:43"
 }

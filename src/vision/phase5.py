@@ -376,6 +376,15 @@ def run_phase5(
         config.get("results_dir", "results")
     )
 
+    output_faces = root / "faces" / f"{video_id}.json"
+    output_tracks = root / "tracks" / f"{video_id}.json"
+    output_summary = results_root / "phase5" / f"{video_id}_summary.json"
+    output_embeddings = root / "embeddings" / f"faces_{video_id}.npy"
+
+    if not config.get("force", False) and output_faces.exists() and output_tracks.exists() and output_summary.exists():
+        LOGGER.info("[phase5] cache hit for %s, skipping", video_id)
+        return read_json(output_summary)
+
     settings = config.get("phase5", {})
     detection_cfg = settings.get("detection", {})
     tracking_cfg = settings.get("tracking", {})

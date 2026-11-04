@@ -12,9 +12,9 @@
   "has_audio": true,
   "stage": "ingestion",
   "video_id": "a13eb5bedd6d",
-  "runtime_s": 4.118,
+  "runtime_s": 6.924,
   "passed": true,
   "reason": "all checks passed",
-  "cfg": "5e211db3",
+  "cfg": "6cd838f2",
   "python": "3.11.9"
 }

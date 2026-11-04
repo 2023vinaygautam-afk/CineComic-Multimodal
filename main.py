@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
+
+os.environ.setdefault('HF_HUB_OFFLINE', '1')
+os.environ.setdefault('TRANSFORMERS_OFFLINE', '1')
 
 from src.common.utils import (
     get_logger,
@@ -33,6 +37,14 @@ STAGES = [
     "phase11",
     "phase12",
 ]
+
+
+def _stage_config(base_config: str | Path, stage_name: str) -> Path:
+    p = Path(base_config)
+    stage_yaml = p.parent / f"{stage_name}.yaml"
+    if stage_yaml.exists():
+        return stage_yaml
+    return p
 
 
 def _normalize_stages(stages):
@@ -247,6 +259,7 @@ def main(argv=None) -> int:
 
         from src.vision.phase5 import run_phase5
 
+        cfg["force"] = args.force
         summary = run_phase5(
             video_id=video_id,
             config=cfg,
@@ -266,7 +279,7 @@ def main(argv=None) -> int:
         result = run_phase6(
             project_root=Path(__file__).resolve().parent,
             video_id=video_id,
-            config_path=Path(args.config),
+            config_path=_stage_config(args.config, "phase6"),
         )
 
         print(
@@ -280,7 +293,7 @@ def main(argv=None) -> int:
         from src.speaker.phase7 import run_phase7
 
         result = run_phase7(
-            config_path=Path(args.config),
+            config_path=_stage_config(args.config, "phase7"),
             video_id=video_id,
         )
 
@@ -295,14 +308,15 @@ def main(argv=None) -> int:
         from src.keyframes.phase8 import run_phase8
 
         result = run_phase8(
-            str(Path(args.config)),
+            str(_stage_config(args.config, "phase8")),
             video_id,
         )
 
+        num_kf = result.get('selected_panels') or result.get('num_keyframes', 0)
         print(
             f"[phase8] "
             f"video_id={video_id} "
-            f"keyframes={result.get('num_keyframes', 0)}"
+            f"keyframes={num_kf}"
         )
 
     if "phase9" in stages:
@@ -326,13 +340,14 @@ def main(argv=None) -> int:
 
         result = run_phase10(
             video_id,
-            Path(args.config),
+            _stage_config(args.config, "phase10"),
         )
 
+        p_count = result.get('metrics', {}).get('panel_count', result.get('num_panels', 0))
         print(
             f"[phase10] "
             f"video_id={video_id} "
-            f"panels={result.get('num_panels', 0)}"
+            f"panels={p_count}"
         )
 
     if "phase11" in stages:
@@ -341,13 +356,14 @@ def main(argv=None) -> int:
 
         result = run_phase11(
             video_id,
-            Path(args.config),
+            _stage_config(args.config, "phase11"),
         )
 
+        p_styled = result.get('metrics', {}).get('successful_panels', result.get('num_panels', 0))
         print(
             f"[phase11] "
             f"video_id={video_id} "
-            f"panels={result.get('num_panels', 0)}"
+            f"panels={p_styled}"
         )
 
     if "phase12" in stages:
@@ -356,13 +372,14 @@ def main(argv=None) -> int:
 
         result = run_phase12(
             video_id,
-            Path(args.config),
+            _stage_config(args.config, "phase12"),
         )
 
+        pg_count = result.get('metrics', {}).get('page_count', result.get('num_pages', 0))
         print(
             f"[phase12] "
             f"video_id={video_id} "
-            f"pages={result.get('num_pages', 0)}"
+            f"pages={pg_count}"
         )
 
     return 0
