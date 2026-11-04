@@ -354,7 +354,7 @@
       "status": "no_candidates"
     }
   ],
-  "runtime_seconds": 899.813,
+  "runtime_seconds": 8.418,
   "ground_truth_evaluated": false,
   "note": "Similarity scores are ranking signals, not calibrated probabilities. The non_visual flag is a heuristic and requires validation against human relevance labels."
 }

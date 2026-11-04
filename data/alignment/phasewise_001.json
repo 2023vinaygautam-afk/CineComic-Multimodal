@@ -1,0 +1,36 @@
+{
+  "video_id": "phasewise_001",
+  "stage": "phase6_clip_alignment",
+  "model": "ViT-B-32",
+  "pretrained": "laion2b_s34b_b79k",
+  "device": "cpu",
+  "num_segments": 2,
+  "num_unique_candidate_frames": 0,
+  "segments_without_candidates": 2,
+  "non_visual_threshold": 0.18,
+  "image_embeddings": "C:\\Users\\vinay\\OneDrive\\Documents\\Finance\\Test Cases\\NLP\\MML_Project\\CineComic_MML\\data\\embeddings\\clip_img_phasewise_001.npy",
+  "text_embeddings": "C:\\Users\\vinay\\OneDrive\\Documents\\Finance\\Test Cases\\NLP\\MML_Project\\CineComic_MML\\data\\embeddings\\clip_txt_phasewise_001.npy",
+  "alignment": [
+    {
+      "segment_id": "1",
+      "start": 0.0,
+      "end": 2.82,
+      "text": "Hello and welcome to the Cinecomic Pipeline.",
+      "candidates": [],
+      "non_visual": null,
+      "status": "no_candidates"
+    },
+    {
+      "segment_id": "2",
+      "start": 3.36,
+      "end": 6.44,
+      "text": "This is a spoken test sample for the Ussur stage.",
+      "candidates": [],
+      "non_visual": null,
+      "status": "no_candidates"
+    }
+  ],
+  "runtime_seconds": 8.327,
+  "ground_truth_evaluated": false,
+  "note": "Similarity scores are ranking signals, not calibrated probabilities. The non_visual flag is a heuristic and requires validation against human relevance labels."
+}

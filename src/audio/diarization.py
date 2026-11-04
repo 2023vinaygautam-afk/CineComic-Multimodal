@@ -294,25 +294,20 @@ class DiarStage(BaseStage):
 
         self.diarize_fn = diarize_fn
 
-        self._artifact = artifact_path(
+        self.raw_path = artifact_path(
             cfg,
             "diarization",
             video_id,
-            "json",
+            "raw.json",
         )
+
+        self._artifact = self.raw_path
 
         self.rttm_path = artifact_path(
             cfg,
             "diarization",
             video_id,
             "rttm",
-        )
-
-        self.raw_path = artifact_path(
-            cfg,
-            "diarization",
-            video_id,
-            "raw.json",
         )
 
         self.ref_rttm_path = artifact_path(
@@ -431,13 +426,16 @@ class DiarStage(BaseStage):
 
         dcfg = self.cfg["diar"]
 
-        # Execute the selected backend.
-        raw_turns, runtime = run_diarization(
-            dcfg,
-            wav,
-            self.log,
-            self.diarize_fn,
-        )
+        # Check cached raw turns first
+        raw_turns, runtime, cached = self._raw_turns(meta)
+        if not cached:
+            # Execute the selected backend.
+            raw_turns, runtime = run_diarization(
+                dcfg,
+                wav,
+                self.log,
+                self.diarize_fn,
+            )
 
         # Apply the existing project's post-processing.
         raw_turns = smooth_turns(

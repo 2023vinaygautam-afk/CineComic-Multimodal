@@ -57,8 +57,16 @@ def resolve_path(root: Path, template: str, video_id: str) -> Path:
     return root / template.format(video_id=video_id)
 
 
-def load_config(path: Path) -> dict:
-    if not path.exists():
+def load_config(path: Path | None = None, config_data: dict | None = None) -> dict:
+    if config_data is not None:
+        if isinstance(config_data, dict):
+            if "phase6" in config_data and isinstance(config_data["phase6"], dict):
+                return config_data["phase6"]
+            if "model_name" in config_data:
+                return config_data
+        raise ValueError("Config must contain a usable 'phase6' section.")
+
+    if path is None or not path.exists():
         raise FileNotFoundError(f"Config file not found: {path}")
 
     with path.open("r", encoding="utf-8") as f:

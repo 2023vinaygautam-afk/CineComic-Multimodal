@@ -2,10 +2,27 @@
 
 from __future__ import annotations
 
+import inspect
 import json
 import time
 from datetime import datetime
 from pathlib import Path
+
+
+try:
+    import av
+except Exception:  # pragma: no cover - optional dependency
+    av = None
+else:
+    _av_open = av.open
+    try:
+        inspect.signature(_av_open)
+    except (TypeError, ValueError):
+        def _compat_av_open(*args, **kwargs):
+            kwargs.pop("metadata_errors", None)
+            return _av_open(*args, **kwargs)
+
+        av.open = _compat_av_open
 
 from src.audio.postprocess import (
     postprocess,

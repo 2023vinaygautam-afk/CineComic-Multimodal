@@ -24,7 +24,11 @@ contains **Phase 0 (foundation) and Phase 1 (video ingestion and validation)**.
 
    `results/environment_report.json`
 
-## Run Phase 1
+## Run a stage or the full pipeline
+
+The runner automatically merges the stage-specific YAML fragments when you use `--stages all`, so a single config file such as `configs/phase2.yaml` is enough for the full pipeline.
 
 ```bash
-python main.py --config configs/phase1.yaml --video path/to/clip.mp4 --video-id clip_001
+python main.py --config configs/phase1.yaml --video path/to/clip.mp4 --video-id clip_001 --stages ingestion
+python main.py --config configs/phase2.yaml --video path/to/clip.mp4 --video-id clip_001 --stages all
+```

@@ -12,7 +12,8 @@ import pytest
 
 from src.common.utils import (
     ConfigError,
-    load_config
+    load_config,
+    load_pipeline_config,
 )
 
 from src.ingestion import metadata as md
@@ -90,6 +91,28 @@ def test_default_config_loads():
         ["audio_sample_rate"]
         == 16000
     )
+
+
+def test_pipeline_config_merges_all_stage_sections():
+
+    cfg = load_pipeline_config(
+        ROOT
+        / "configs"
+        / "phase2.yaml"
+    )
+
+    assert cfg["diar"]["backend"] == "pyannote"
+    assert cfg["phase4"]["shots"]["detector"] == "content"
+
+
+def test_phase7_handles_empty_diarization_and_tracks():
+    assert md.random_frame_check is not None
+    from src.speaker.phase7 import extract_track_objects, parse_turns
+
+    assert parse_turns({}) == []
+    assert parse_turns({"segments": []}) == []
+    assert extract_track_objects({}) == []
+    assert extract_track_objects({"tracks": []}) == []
 
 
 # ---- Phase 1 behaviour ----------------------------------------------
@@ -199,6 +222,60 @@ def test_truncated_file_rejected(
         md.IngestionError
     ):
         run_ingest(broken)
+
+
+def test_random_frame_check_distinguishes_black_from_dark_scene(tmp_path):
+    black_path = tmp_path / "black.mp4"
+    dark_path = tmp_path / "dark_scene.mp4"
+
+    for target, vf in [
+        (black_path, None),
+        (dark_path, "drawbox=x=40:y=40:w=200:h=120:color=white@1:t=fill"),
+    ]:
+        cmd = [
+            "ffmpeg",
+            "-y",
+            "-v",
+            "error",
+            "-f",
+            "lavfi",
+            "-i",
+            "color=c=black:s=320x240:d=1",
+        ]
+
+        if vf:
+            cmd += [
+                "-vf",
+                vf,
+            ]
+
+        cmd += [
+            "-c:v",
+            "libx264",
+            "-pix_fmt",
+            "yuv420p",
+            str(target),
+        ]
+
+        subprocess.run(cmd, check=True, capture_output=True)
+
+    black_metrics = md.random_frame_check(
+        black_path,
+        duration_s=1.0,
+        n=3,
+        seed=42,
+        black_mean=8.0,
+    )
+    dark_metrics = md.random_frame_check(
+        dark_path,
+        duration_s=1.0,
+        n=3,
+        seed=42,
+        black_mean=8.0,
+    )
+
+    assert black_metrics["bad"] > 0
+    assert dark_metrics["bad"] == 0
 
 
 def test_missing_and_empty_files_rejected(

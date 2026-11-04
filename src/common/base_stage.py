@@ -124,6 +124,7 @@ class BaseStage:
             python=platform.python_version(),
         )
 
+        self.metrics_path.parent.mkdir(parents=True, exist_ok=True)
         self.metrics_path.write_text(
             json.dumps(metrics, indent=2),
             encoding="utf-8"

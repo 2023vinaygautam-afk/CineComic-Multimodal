@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
 from src.common.utils import (
     get_logger,
-    load_config,
+    load_pipeline_config,
     set_seed,
 )
 from src.ingestion.metadata import (
@@ -23,7 +24,30 @@ STAGES = [
     "asr",
     "diarization",
     "phase4",
+    "phase5",
+    "phase6",
+    "phase7",
+    "phase8",
+    "phase9",
+    "phase10",
+    "phase11",
+    "phase12",
 ]
+
+
+def _normalize_stages(stages):
+    """Expand the special 'all' stage while preserving pipeline order."""
+    if not stages:
+        return ["ingestion"]
+
+    if "all" in stages:
+        return list(STAGES)
+
+    ordered = []
+    for name in STAGES:
+        if name in stages:
+            ordered.append(name)
+    return ordered
 
 
 def main(argv=None) -> int:
@@ -54,8 +78,8 @@ def main(argv=None) -> int:
         "--stages",
         nargs="+",
         default=["ingestion"],
-        choices=STAGES,
-        help="stages to run, in order",
+        choices=STAGES + ["all"],
+        help="stages to run, in order; use 'all' for the full pipeline",
     )
 
     ap.add_argument(
@@ -65,8 +89,9 @@ def main(argv=None) -> int:
     )
 
     args = ap.parse_args(argv)
+    stages = _normalize_stages(args.stages)
 
-    cfg = load_config(
+    cfg = load_pipeline_config(
         args.config
     )
 
@@ -76,7 +101,7 @@ def main(argv=None) -> int:
 
     video_id = args.video_id
 
-    if "ingestion" in args.stages:
+    if "ingestion" in stages:
 
         if not args.video:
             ap.error(
@@ -118,7 +143,7 @@ def main(argv=None) -> int:
             "when ingestion is not in --stages"
         )
 
-    if "asr" in args.stages:
+    if "asr" in stages:
 
         from src.audio.whisper_asr import (
             AsrError,
@@ -158,7 +183,7 @@ def main(argv=None) -> int:
         if not ok:
             return 1
 
-    if "diarization" in args.stages:
+    if "diarization" in stages:
 
         from src.audio.diarization import (
             DiarError,
@@ -198,14 +223,9 @@ def main(argv=None) -> int:
         if not ok:
             return 1
 
-    if "phase4" in args.stages:
+    if "phase4" in stages:
 
         from src.video.phase4 import Phase4Stage
-
-        log = get_logger(
-            video_id,
-            cfg["log_dir"]
-        )
 
         ok = Phase4Stage(
             cfg,
@@ -222,6 +242,128 @@ def main(argv=None) -> int:
 
         if not ok:
             return 1
+
+    if "phase5" in stages:
+
+        from src.vision.phase5 import run_phase5
+
+        summary = run_phase5(
+            video_id=video_id,
+            config=cfg,
+            video_path=Path(args.video) if args.video else None,
+        )
+
+        print(
+            f"[phase5] "
+            f"video_id={video_id} "
+            f"tracks={summary.get('tracks', 0)}"
+        )
+
+    if "phase6" in stages:
+
+        from src.vision.phase6 import run_phase6
+
+        result = run_phase6(
+            project_root=Path(__file__).resolve().parent,
+            video_id=video_id,
+            config_path=Path(args.config),
+        )
+
+        print(
+            f"[phase6] "
+            f"video_id={video_id} "
+            f"segments={result.get('num_segments', 0)}"
+        )
+
+    if "phase7" in stages:
+
+        from src.speaker.phase7 import run_phase7
+
+        result = run_phase7(
+            config_path=Path(args.config),
+            video_id=video_id,
+        )
+
+        print(
+            f"[phase7] "
+            f"video_id={video_id} "
+            f"match_rate={result.get('match_rate', 0.0)}"
+        )
+
+    if "phase8" in stages:
+
+        from src.keyframes.phase8 import run_phase8
+
+        result = run_phase8(
+            str(Path(args.config)),
+            video_id,
+        )
+
+        print(
+            f"[phase8] "
+            f"video_id={video_id} "
+            f"keyframes={result.get('num_keyframes', 0)}"
+        )
+
+    if "phase9" in stages:
+
+        from src.emotion.phase9 import Phase9Stage
+
+        ok = Phase9Stage(cfg, video_id).execute(force=args.force)
+
+        print(
+            f"[phase9] "
+            f"video_id={video_id} "
+            f"gate={'PASS' if ok else 'FAIL'}"
+        )
+
+        if not ok:
+            return 1
+
+    if "phase10" in stages:
+
+        from src.layout.phase10 import run_phase10
+
+        result = run_phase10(
+            video_id,
+            Path(args.config),
+        )
+
+        print(
+            f"[phase10] "
+            f"video_id={video_id} "
+            f"panels={result.get('num_panels', 0)}"
+        )
+
+    if "phase11" in stages:
+
+        from src.comic.phase11 import run_phase11
+
+        result = run_phase11(
+            video_id,
+            Path(args.config),
+        )
+
+        print(
+            f"[phase11] "
+            f"video_id={video_id} "
+            f"panels={result.get('num_panels', 0)}"
+        )
+
+    if "phase12" in stages:
+
+        from src.comic.phase12 import run_phase12
+
+        result = run_phase12(
+            video_id,
+            Path(args.config),
+        )
+
+        print(
+            f"[phase12] "
+            f"video_id={video_id} "
+            f"pages={result.get('num_pages', 0)}"
+        )
 
     return 0
 

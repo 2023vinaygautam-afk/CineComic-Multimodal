@@ -15,7 +15,7 @@
   "black_border_rate": 0.7372262773722628,
   "coverage": 0.7272727272727273,
   "candidates_outside_shot": 0,
-  "runtime_s": 0.0020139217376708984,
+  "runtime_s": 0.021579742431640625,
   "passed": true,
   "reason": "all gates passed",
   "cfg": "0fd552b4"

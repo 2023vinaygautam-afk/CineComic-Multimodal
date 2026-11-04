@@ -265,11 +265,15 @@ def random_frame_check(
     black_mean: float
 ) -> dict:
 
-    """Seek to n random timestamps;
-    a frame is bad if unreadable or almost black.
+    """Seek to n random timestamps.
+
+    A frame is treated as black only when it is near-uniformly dark, not when it
+    is merely a legitimate low-light scene. Rejecting any frame with a low average
+    brightness alone incorrectly rejects dark-but-readable video content.
     """
 
     import cv2
+    import numpy as np
 
     rng = random.Random(seed)
 
@@ -282,6 +286,7 @@ def random_frame_check(
     )
 
     bad = []
+    black_threshold = max(float(black_mean) * 10.0, 32.0)
 
     cap = cv2.VideoCapture(str(path))
 
@@ -296,10 +301,19 @@ def random_frame_check(
 
             ok, frame = cap.read()
 
+            if not ok or frame is None:
+                bad.append(round(t, 3))
+                continue
+
+            gray = frame.astype(np.float32)
+            mean_value = float(gray.mean())
+            max_value = float(gray.max())
+            dark_fraction = float(np.mean(gray <= float(black_mean)))
+
             if (
-                not ok
-                or frame is None
-                or float(frame.mean()) < black_mean
+                mean_value < black_mean
+                and max_value < black_threshold
+                and dark_fraction > 0.99
             ):
                 bad.append(round(t, 3))
 
