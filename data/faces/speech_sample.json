@@ -1,9 +1,0 @@
-{
-  "video_id": "speech_sample",
-  "video_path": "data\\raw\\speech_sample.mp4",
-  "num_sampled_frames": 15,
-  "frames_read": 15,
-  "frames_failed": 0,
-  "num_face_detections": 0,
-  "detections": []
-}

@@ -1,9 +1,0 @@
-{
-  "video_id": "phasewise_001",
-  "video_path": "tmp_all_video\\speech_sample.mp4",
-  "num_sampled_frames": 14,
-  "frames_read": 14,
-  "frames_failed": 0,
-  "num_face_detections": 0,
-  "detections": []
-}
