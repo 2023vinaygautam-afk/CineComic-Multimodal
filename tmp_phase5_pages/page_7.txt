@@ -1,0 +1,77 @@
+CineComic-MML - Phase 4 and 5 code
+Page 7
+        fps = cap.get(cv2.CAP_PROP_FPS); n_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        cap.release()
+        duration = n_frames / fps
+        p = self.p4
+        crop_box = detect_black_bars(self.video_path, **p["black_bar"])
+        log.info("crop_box=%s", crop_box)
+        shots = detect_shots(self.video_path, duration, fps, p["shots"]["detector"],
+                             p["shots"]["threshold"], p["shots"]["min_scene_len_s"])
+        add_index_ranges(shots, fps, n_frames)
+        log.info("%d shots", len(shots))
+        segments = self._segments()
+        plan = build_sampling_plan(shots, segments, fps, p["sampling"])
+        log.info("decoding %d sampled frames", len(plan))
+        if self.frames_dir.exists():  # stale frames from an earlier config must not survive
+            for old in self.frames_dir.rglob("*.jpg"):
+                old.unlink()
+        frames = extract_frames(self.video_path, plan, crop_box, self.frames_dir, fps,
+                                p["sampling"]["jpeg_quality"], p["quality"]["border_dark_thresh"])
+        apply_filters(frames, p["quality"])
+        cands, backfilled = build_segment_candidates(segments, shots, frames, p["sampling"])
+        n_removed = defaultdict(int)
+        for f in frames:
+            if f["reject"] is not None:
+                n_removed[f["reject"]] += 1
+                Path(f["path"]).unlink(missing_ok=True)
+        kept = [f for f in frames if f["reject"] is None]
+        by_shot = defaultdict(list)
+        for f in sorted(kept, key=lambda f: f["t"]):
+            rec = {k: (round(f[k], 3) if isinstance(f[k], float) else f[k])
+                   for k in ("frame_id", "idx", "t", "sharp", "brightness", "phash", "path", "border_dark"
+                         )}
+            if f.get("backfilled"):
+                rec["backfilled"] = True
+            by_shot[f["shot_id"]].append(rec)
+        doc = {
+            "video_id": self.video_id, "fps": fps, "n_frames": n_frames, "duration_s": duration,
+            "crop_box": crop_box, "config_hash": self.cache_key(),
+            "shots": [{"shot_id": s["shot_id"], "start": round(s["start"], 4), "end": round(s["end"], 4),
+                       "frames": by_shot[s["shot_id"]]} for s in shots],
+            "segment_candidates": cands,
+            "stats": {"sampled": len(frames), "kept": len(kept), "removed": dict(n_removed),
+                      "backfilled": backfilled, "n_segments": len(segments)},
+        }
+        self.out.parent.mkdir(parents=True, exist_ok=True)
+        self.out.write_text(json.dumps(doc, indent=1), encoding="utf-8")
+        self.make_contact_sheet(doc)
+    # ---------- evaluation ----------
+    def evaluate(self, gt: dict | None = None) -> dict:
+        doc = json.loads(self.out.read_text())
+        g = self.p4["gate"]; mn = self.p4["sampling"]["min_per_segment"]
+        frames = {f["frame_id"]: (s, f) for s in doc["shots"] for f in s["frames"]}
+        kept = [f for s in doc["shots"] for f in s["frames"]]
+        cands = doc["segment_candidates"]
+        m = {
+            "n_shots": len(doc["shots"]), "n_frames_kept": len(kept), **{f"stats_{k}": v for k, v in doc["
+                  stats"].items() if k != "removed"},
+            "removed": doc["stats"]["removed"],
+            "pct_removed": 1 - doc["stats"]["kept"] / max(1, doc["stats"]["sampled"]),
+            "pool_per_min": len(kept) / (doc["duration_s"] / 60),
+            "black_border_rate": sum(f["border_dark"] for f in kept) / max(1, len(kept)),
+        }
+        if cands:
+            m["coverage"] = sum(len(v) >= mn for v in cands.values()) / len(cands)
+            # unit-test style invariant: every candidate lies inside the shot it belongs to
+            bad = 0
+            for ids in cands.values():
+                for fid in ids:
+                    s, f = frames[fid]
+                    bad += not (s["start"] - 1e-6 <= f["t"] <= s["end"] + 1e-6)
+            m["candidates_outside_shot"] = bad
+        if gt:
+            if "boundaries" in gt:
+                pred = [s["start"] for s in doc["shots"][1:]]
+                m.update(boundary_prf(pred, gt["boundaries"], g["boundary_tol_s"]))
+            if "crop_box" in gt:

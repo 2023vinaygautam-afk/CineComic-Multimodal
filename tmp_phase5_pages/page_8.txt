@@ -1,0 +1,72 @@
+CineComic-MML - Phase 4 and 5 code
+Page 8
+                m["crop_iou"] = box_iou(doc["crop_box"], gt["crop_box"])
+        return m
+    def gate(self, m: dict) -> tuple[bool, str]:
+        g, fails = self.p4["gate"], []
+        if "coverage" in m and m["coverage"] < g["coverage"]: fails.append(f"coverage {m['coverage']:.2f}"
+              )
+        if m.get("candidates_outside_shot", 0): fails.append("candidates outside their shot")
+        if m["black_border_rate"] > g["max_black_border_rate"]: fails.append(f"black borders {m['black_bor
+              der_rate']:.3f}")
+        if "boundary_f1" in m and m["boundary_f1"] < g["boundary_f1"]: fails.append(f"boundary F1 {m['boun
+              dary_f1']:.2f}")
+        if "crop_iou" in m and m["crop_iou"] < g["crop_iou"]: fails.append(f"crop IoU {m['crop_iou']:.2f}"
+              )
+        return (not fails, "; ".join(fails) or "all gates passed")
+    def execute(self, gt=None, force=False) -> bool:
+        t0 = time.time()
+        self.run(force=force)
+        m = self.evaluate(gt)
+        ok, why = self.gate(m)
+        m.update(runtime_s=time.time() - t0, passed=ok, reason=why, cfg=self.cache_key())
+        self.metrics_path.write_text(json.dumps(m, indent=2))
+        log.info("metrics: %s", json.dumps(m))
+        return ok
+    # ---------- manual visual check ----------
+    def make_contact_sheet(self, doc: dict) -> None:
+        cs = self.p4["contact_sheet"]
+        shots = [s for s in doc["shots"] if s["frames"]]
+        if not shots:
+            return
+        rnd = random.Random(self.cfg.get("seed", 42))
+        pick = sorted(rnd.sample(shots, min(cs["n_shots"], len(shots))), key=lambda s: s["shot_id"])
+        tw, tiles = cs["thumb_w"], []
+        for s in pick:
+            img = cv2.imread(s["frames"][len(s["frames"]) // 2]["path"])
+            th = int(img.shape[0] * tw / img.shape[1])
+            img = cv2.resize(img, (tw, th))
+            cv2.putText(img, f"shot {s['shot_id']}", (6, 18), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255)
+                  , 2)
+            tiles.append(cv2.resize(img, (tw, int(tw * 9 / 16))))
+        while len(tiles) % cs["cols"]:
+            tiles.append(np.zeros_like(tiles[0]))
+        rows = [np.hstack(tiles[i:i + cs["cols"]]) for i in range(0, len(tiles), cs["cols"])]
+        self.results_dir.mkdir(parents=True, exist_ok=True)
+        cv2.imwrite(str(self.results_dir / f"{self.video_id}_contact.jpg"), np.vstack(rows))
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--config", default="configs/phase4.yaml")
+    ap.add_argument("--video", required=True)
+    ap.add_argument("--force", action="store_true")
+    ap.add_argument("--gt-boundaries", help="JSON list of manual cut times in seconds")
+    ap.add_argument("--gt-crop", help="manual crop box 'x0,y0,x1,y1'")
+    a = ap.parse_args()
+    cfg = yaml.safe_load(open(a.config))
+    Path("logs").mkdir(exist_ok=True)
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s",
+                        handlers=[logging.FileHandler(f"logs/{a.video}.log"), logging.StreamHandler()])
+    gt = {}
+    if a.gt_boundaries: gt["boundaries"] = json.load(open(a.gt_boundaries))
+    if a.gt_crop: gt["crop_box"] = [int(x) for x in a.gt_crop.split(",")]
+    ok = Phase4Stage(cfg, a.video).execute(gt or None, force=a.force)
+    raise SystemExit(0 if ok else 1)
+if __name__ == "__main__":
+    main()
+9. tests/test_phase4.py
+Phase 4 tests on a synthetic video.
+ import json
+from pathlib import Path
+import cv2
+import numpy as np
+import pytest

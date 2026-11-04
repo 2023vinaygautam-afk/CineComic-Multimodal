@@ -1,0 +1,72 @@
+CineComic-MML - Phase 4 and 5 code
+Page 6
+import yaml
+from src.evaluation.shot_metrics import boundary_prf, box_iou
+from src.video.black_bar import detect_black_bars
+from src.video.frame_extraction import (add_index_ranges, assign_shot, build_sampling_plan,
+                                        extract_frames, segment_window)
+from src.video.quality_filter import apply_filters
+from src.video.shot_detection import detect_shots
+log = logging.getLogger("phase4")
+def build_segment_candidates(segments, shots, frames, cfg) -> tuple[dict, int]:
+    """segment_id -> [frame_id]. Guarantees min_per_segment where the shot has enough usable frames."""
+    by_shot = defaultdict(list)
+    for f in frames:
+        by_shot[f["shot_id"]].append(f)
+    mx, mn, pad = cfg["max_candidates_per_segment"], cfg["min_per_segment"], cfg["window_pad_s"]
+    out, backfilled = {}, 0
+    for seg in segments:
+        shot = assign_shot(seg, shots)
+        lo, hi = segment_window(seg, shot, pad)
+        pool = by_shot[shot["shot_id"]]
+        chosen = [f for f in pool if f["reject"] is None and lo <= f["t"] <= hi]
+        if len(chosen) > mx:  # cap, evenly spaced in time
+            sel = sorted(set(np.linspace(0, len(chosen) - 1, mx).round().astype(int)))
+            chosen = [chosen[i] for i in sel]
+        if len(chosen) < mn:  # backfill with the sharpest blurry/duplicate frames from the window
+            rej = sorted((f for f in pool if f["reject"] in ("blurry", "duplicate") and lo <= f["t"] <= hi
+                  ),
+                         key=lambda f: (-f["sharp"], f["t"]))
+            for f in rej[: mn - len(chosen)]:
+                f["reject"], f["backfilled"] = None, True
+                chosen.append(f); backfilled += 1
+        if len(chosen) < mn:  # still short: nearest kept frames of the same shot
+            mid = (seg["start"] + seg["end"]) / 2
+            ids = {f["frame_id"] for f in chosen}
+            near = sorted((f for f in pool if f["reject"] is None and f["frame_id"] not in ids),
+                          key=lambda f: abs(f["t"] - mid))
+            chosen += near[: mn - len(chosen)]
+        out[str(seg["segment_id"])] = [f["frame_id"] for f in sorted(chosen, key=lambda f: f["t"])]
+    return out, backfilled
+class Phase4Stage:
+    name = "shots"
+    requires = ["subtitles"]
+    def __init__(self, cfg: dict, video_id: str):
+        self.cfg, self.p4, self.video_id = cfg, cfg["phase4"], video_id
+        d = Path(cfg["data_dir"])
+        found = sorted((d / "raw").glob(f"{video_id}.*"))
+        if not found:
+            raise FileNotFoundError(f"no video data/raw/{video_id}.*")
+        self.video_path = found[0]
+        self.out = d / "shots" / f"{video_id}.json"
+        self.metrics_path = self.out.with_suffix(".metrics.json")
+        self.frames_dir = d / "frames" / video_id
+        self.transcript_path = d / "subtitles" / f"{video_id}.json"
+        self.results_dir = Path(cfg.get("results_dir", "results")) / "phase4"
+    # ---------- helpers ----------
+    def cache_key(self) -> str:
+        blob = json.dumps({"p4": self.p4, "seed": self.cfg.get("seed")}, sort_keys=True)
+        return hashlib.sha1(blob.encode()).hexdigest()[:8]
+    def _segments(self) -> list[dict]:
+        if not self.transcript_path.exists():
+            log.warning("no transcript at %s: segment_candidates will be empty", self.transcript_path)
+            return []
+        segs = json.loads(self.transcript_path.read_text(encoding="utf-8"))["segments"]
+        return sorted(segs, key=lambda s: s["start"])
+    # ---------- main work ----------
+    def run(self, force=False) -> None:
+        if self.out.exists() and not force:
+            if json.loads(self.out.read_text()).get("config_hash") == self.cache_key():
+                log.info("cache hit for %s, skipping", self.video_id); return
+        random.seed(self.cfg.get("seed", 42)); np.random.seed(self.cfg.get("seed", 42))
+        cap = cv2.VideoCapture(str(self.video_path))

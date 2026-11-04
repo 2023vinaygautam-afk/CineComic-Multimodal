@@ -1,0 +1,70 @@
+CineComic-MML - Phase 4 and 5 code
+Page 4
+    """Sets rec['reject'] to None | 'dark' | 'blurry' | 'duplicate' (in place)."""
+    for f in frames:
+        f["reject"] = "dark" if f["brightness"] < q["min_brightness"] else None
+    live = [f for f in frames if f["reject"] is None]
+    if not live:
+        return
+    median = float(np.median([f["sharp"] for f in live]))
+    by_shot = defaultdict(list)
+    for f in live:
+        by_shot[f["shot_id"]].append(f)
+    for fs in by_shot.values():
+        sharpest = max(fs, key=lambda f: f["sharp"])  # a shot never loses its best frame to blur
+        for f in fs:
+            if f is not sharpest and f["sharp"] < q["blur_rel_thresh"] * median:
+                f["reject"] = "blurry"
+    # Near-duplicates inside a shot: sharpest of each group survives (deterministic tie-break on t)
+    for fs in by_shot.values():
+        kept: list[dict] = []
+        for f in sorted((x for x in fs if x["reject"] is None), key=lambda x: (-x["sharp"], x["t"])):
+            if any(hamming_hex(f["phash"], k["phash"]) <= q["phash_hamming"] for k in kept):
+                f["reject"] = "duplicate"
+            else:
+                kept.append(f)
+6. src/video/frame_extraction.py
+Sampling plan and the sequential decode pass that saves cropped frames.
+ """Sampling plan (which frame indices to decode) and one sequential decode pass."""
+from __future__ import annotations
+import logging
+from pathlib import Path
+import cv2
+import numpy as np
+from src.video.quality_filter import frame_stats
+log = logging.getLogger("phase4")
+def add_index_ranges(shots: list[dict], fps: float, n_frames: int) -> list[dict]:
+    """Give every shot an inclusive frame range [i0, i1]; shots tile the video with no overlap."""
+    for k, s in enumerate(shots):
+        s["i0"] = min(int(round(s["start"] * fps)), n_frames - 1)
+        nxt = int(round(shots[k + 1]["start"] * fps)) if k + 1 < len(shots) else n_frames
+        s["i1"] = max(s["i0"], min(nxt - 1, n_frames - 1))
+        s["start"], s["end"] = s["i0"] / fps, (s["i1"] + 1) / fps
+    return shots
+def assign_shot(seg: dict, shots: list[dict]) -> dict:
+    """Shot with the largest time overlap with the segment (nearest shot if no overlap)."""
+    ov = [max(0.0, min(seg["end"], s["end"]) - max(seg["start"], s["start"])) for s in shots]
+    if max(ov) > 0:
+        return shots[int(np.argmax(ov))]
+    mid = (seg["start"] + seg["end"]) / 2
+    return min(shots, key=lambda s: 0 if s["start"] <= mid < s["end"] else min(abs(mid - s["start"]), abs(
+          mid - s["end"])))
+def segment_window(seg: dict, shot: dict, pad: float) -> tuple[float, float]:
+    lo, hi = max(shot["start"], seg["start"] - pad), min(shot["end"], seg["end"] + pad)
+    if hi < lo:
+        lo = hi = min(max((seg["start"] + seg["end"]) / 2, shot["start"]), shot["end"])
+    return lo, hi
+def build_sampling_plan(shots, segments, fps, cfg) -> dict[int, tuple[int, str]]:
+    """Returns {frame_idx: (shot_id, frame_id)}. frame_ids are numbered by time inside each shot."""
+    step = max(1, int(round(fps / cfg["fps"])))
+    per_shot = {}
+    for s in shots:
+        i0, i1 = s["i0"], s["i1"]
+        per_shot[s["shot_id"]] = set(range(i0, i1 + 1, step)) | {i0, (i0 + i1) // 2, i1}
+    for seg in segments:
+        s = assign_shot(seg, shots)
+        lo_t, hi_t = segment_window(seg, s, cfg["window_pad_s"])
+        lo = min(max(int(round(lo_t * fps)), s["i0"]), s["i1"])
+        hi = min(max(int(round(hi_t * fps)), lo), s["i1"])
+        have = [i for i in per_shot[s["shot_id"]] if lo <= i <= hi]
+        if len(have) < cfg["min_per_segment"]:  # short window: add evenly spaced extra frames

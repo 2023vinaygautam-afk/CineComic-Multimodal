@@ -1,0 +1,33 @@
+CineComic-MML - Phase 4 and 5 code
+Page 19
+        {"t": 5 / FPS, "faces": [{"box": [30, 50, 30 + S, 50 + S], "character": "alice", "frontal": True}]
+              },
+        {"t": 60 / FPS, "faces": [{"box": [30, 60, 30 + S, 60 + S], "character": "alice", "frontal": True}
+              ,
+                                  {"box": [250, 60, 250 + S, 60 + S], "character": "bob", "frontal": True}
+                                        ]},
+        {"t": 110 / FPS, "faces": [{"box": [150, 80, 150 + S, 80 + S], "character": "bob", "frontal": True
+              }]}]}
+    assert stage.execute(gt=gt, force=True)
+    td = json.loads(stage.out.read_text()); m = json.loads(stage.metrics_path.read_text())
+    tr = td["tracks"]
+    assert len(tr) == 4 and m["n_characters"] == 2 and m["unknown_rate"] == 0
+    assert m["tracks_spanning_shots"] == 0 and m["same_time_same_character"] == 0
+    by_shot = {}
+    for t in tr: by_shot.setdefault(t["shot_id"], []).append(t)
+    a0 = by_shot[0][0]["character_id"]; b2 = by_shot[2][0]["character_id"]
+    assert a0 != b2 and a0 in {t["character_id"] for t in by_shot[1]} and b2 in {t["character_id"] for t i
+          n by_shot[1]}
+    assert a0 == "CHAR_01"                                             # numbered by first appearance
+    assert m["det_recall"] == 1.0 and m["det_precision"] == 1.0 and m["recall_medium_large_frontal"] == 1.
+          0
+    assert m["cluster_purity"] == 1.0 and m["id_switches"] == 0
+    for t in tr:                                                       # mouth lies inside its face box
+        for f in t["frames"]:
+            assert f["box"][0] <= f["mouth"][0] <= f["box"][2] and f["box"][1] <= f["mouth"][1] <= f["box"
+                  ][3]
+    E = np.load(stage.emb_path); assert E.shape[1] == 512 and E.shape[0] == json.loads(stage.faces_path.re
+          ad_text())["n_faces"]
+    stage.run(force=True)                                              # deterministic on rerun
+    assert [(t["track_id"], t["character_id"]) for t in json.loads(stage.out.read_text())["tracks"]] == [(
+          t["track_id"], t["character_id"]) for t in tr]

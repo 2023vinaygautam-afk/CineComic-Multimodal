@@ -1,0 +1,67 @@
+CineComic-MML - Phase 4 and 5 code
+Page 10
+Part B - Phase 5
+10. configs/phase5.yaml
+All Phase 5 thresholds and settings.
+ data_dir: data
+results_dir: results
+seed: 42
+phase5:
+  detection:
+    model_name: buffalo_l      # InsightFace pack: SCRFD detector + ArcFace (512-d). CHECK its licence (re
+          search use).
+    model_root: null           # null = ~/.insightface
+    det_size: [640, 640]       # raise (e.g. 960) if small faces are missed, at a speed cost
+    use_gpu: false
+    det_fps: 5                 # detection rate inside dialogue windows
+    window_pad_s: 0.5
+    min_face_px: 40            # discard faces smaller than this (min of width/height)
+    min_det_score: 0.5
+    ref_px: 112                # face height at which the size term of quality saturates
+  tracking:
+    max_gap_s: 1.0             # a track survives this long without a match
+    iou_weight: 0.5            # score = w*IoU + (1-w)*cosine(embedding)
+    iou_min: 0.1               # a pair is eligible if IoU >= iou_min OR cosine >= emb_gate
+    emb_gate: 0.5
+    emb_veto: 0.1              # cosine below this blocks a match even if the boxes overlap
+    min_score: 0.3
+    ema: 0.3                   # running track-embedding update weight
+  identity:
+    top_k: 5                   # track embedding = mean of its top-k quality faces
+    cluster_threshold: 0.55    # cosine DISTANCE for merging tracks (tune on labelled faces)
+    min_track_faces: 2
+    min_track_quality: 0.25
+    min_id_conf: 0.40          # below this the track is UNKNOWN instead of forced into a cluster
+  track_sheet: {cols: 8, thumb: 112}
+  eval:
+    tol_s: 0.06                # GT frame time vs detection time tolerance
+    iou_thr: 0.5
+    size_bins: [80, 160]       # face height px: small < 80 <= medium < 160 <= large
+  gate:                        # suggested starting values; justify your own in the report
+    medium_large_frontal_recall: 0.90
+    max_id_switches: 0
+    cluster_purity: 0.90
+11. src/vision/face_detection.py
+InsightFace detector + ArcFace embeddings, face quality, mouth point.
+ """Face detection + ArcFace embeddings (InsightFace) and per-face quality / mouth point.
+All coordinates are ORIGINAL-FRAME pixels (the full decoded frame, not the black-bar-cropped one).
+"""
+from __future__ import annotations
+import numpy as np
+class InsightFaceAnalyzer:
+    """SCRFD detector + ArcFace recogniser from the InsightFace 'buffalo_l' pack.
+    analyze(bgr) -> [{'box': [x0,y0,x1,y1], 'kps': 5x2, 'det': float, 'emb': 512-d L2-normalised}]
+    Any object with this analyze() method can replace it (the tests use a fake one)."""
+    def __init__(self, model_name="buffalo_l", det_size=(640, 640), use_gpu=False, model_root=None):
+        from insightface.app import FaceAnalysis  # imported lazily so the rest of the code needs no GPU s
+              tack
+        providers = ["CUDAExecutionProvider", "CPUExecutionProvider"] if use_gpu else ["CPUExecutionProvid
+              er"]
+        kw = {"root": model_root} if model_root else {}
+        self.app = FaceAnalysis(name=model_name, providers=providers,
+                                allowed_modules=["detection", "recognition"], **kw)
+        self.app.prepare(ctx_id=0 if use_gpu else -1, det_size=tuple(det_size))
+    def analyze(self, bgr: np.ndarray) -> list[dict]:
+        return [{"box": f.bbox.tolist(), "kps": f.kps.tolist(), "det": float(f.det_score),
+                 "emb": f.normed_embedding.astype(np.float32)} for f in self.app.get(bgr)]
+def face_quality(box, kps, det_score: float, ref_px: float = 112.0) -> tuple[float, float]:

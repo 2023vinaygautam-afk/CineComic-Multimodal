@@ -1,0 +1,71 @@
+CineComic-MML - Phase 4 and 5 code
+Page 13
+    ct, cp, cj = Counter(true), Counter(pred), Counter(zip(true, pred))
+    tp = sum(_comb2(v) for v in cj.values())
+    pp, tt = sum(_comb2(v) for v in cp.values()), sum(_comb2(v) for v in ct.values())
+    P, R = (tp / pp if pp else 1.0), (tp / tt if tt else 1.0)
+    return {"pairwise_precision": P, "pairwise_recall": R, "pairwise_f1": 2 * P * R / (P + R) if P + R els
+          e 0.0}
+def purity(true, pred) -> float:
+    by = defaultdict(Counter)
+    for t, p in zip(true, pred): by[p][t] += 1
+    return sum(max(c.values()) for c in by.values()) / len(true) if true else 1.0
+def bcubed(true, pred) -> dict:
+    ct, cp, cj = Counter(true), Counter(pred), Counter(zip(true, pred))
+    n = len(true)
+    if not n: return {"bcubed_precision": 1.0, "bcubed_recall": 1.0, "bcubed_f1": 1.0}
+    P = sum(cj[(t, p)] / cp[p] for t, p in zip(true, pred)) / n
+    R = sum(cj[(t, p)] / ct[t] for t, p in zip(true, pred)) / n
+    return {"bcubed_precision": P, "bcubed_recall": R, "bcubed_f1": 2 * P * R / (P + R) if P + R else 0.0}
+def id_switches(records: list[dict]) -> tuple[int, int]:
+    """records: {shot_id, gt, track_id, t}. Per (shot, true person), ordered by time:
+    switches = changes of track_id between consecutive matched faces; fragmentation = distinct tracks - 1.
+          """
+    groups = defaultdict(list)
+    for r in records: groups[(r["shot_id"], r["gt"])].append(r)
+    sw = fr = 0
+    for rs in groups.values():
+        ids = [r["track_id"] for r in sorted(rs, key=lambda r: r["t"])]
+        sw += sum(a != b for a, b in zip(ids, ids[1:]))
+        fr += len(set(ids)) - 1
+    return sw, fr
+def evaluate_against_gt(gt: dict, faces: list[dict], track_char: dict, cfg: dict) -> dict:
+    """gt = {'frames': [{'t': s, 'faces': [{'box': [x0,y0,x1,y1], 'character': str?, 'frontal': bool?}]}]}
+    Every visible face in a labelled frame must be labelled, otherwise precision is meaningless."""
+    faces = sorted(faces, key=lambda f: f["t"]); ts = [f["t"] for f in faces]
+    lo_b, hi_b = cfg["size_bins"]
+    size_of = lambda h: "small" if h < lo_b else ("medium" if h < hi_b else "large")
+    tp = fp = fn = 0
+    rec = defaultdict(lambda: [0, 0])          # category -> [found, total]
+    pairs, sw_recs, n_unknown = [], [], 0
+    for fr in gt["frames"]:
+        dets = faces[bisect_left(ts, fr["t"] - cfg["tol_s"]): bisect_right(ts, fr["t"] + cfg["tol_s"])]
+        gts = fr["faces"]
+        m = match_boxes([g["box"] for g in gts], [d["box"] for d in dets], cfg["iou_thr"])
+        found = {gi: di for gi, di in m}
+        tp += len(m); fn += len(gts) - len(m); fp += len(dets) - len(m)
+        for gi, g in enumerate(gts):
+            cats = [size_of(g["box"][3] - g["box"][1])]
+            if "frontal" in g: cats.append("frontal" if g["frontal"] else "profile")
+            if "frontal" in g and g["frontal"] and cats[0] in ("medium", "large"):
+                cats.append("medium_large_frontal")
+            for c in cats:
+                rec[c][1] += 1; rec[c][0] += gi in found
+            if gi in found and g.get("character"):
+                d = dets[found[gi]]; pc = track_char.get(d["track_id"], "UNKNOWN")
+                if pc == "UNKNOWN": n_unknown += 1; continue
+                pairs.append((g["character"], pc))
+                sw_recs.append({"shot_id": d["shot_id"], "gt": g["character"], "track_id": d["track_id"], 
+                      "t": d["t"]})
+    P, R = tp / (tp + fp) if tp + fp else 0.0, tp / (tp + fn) if tp + fn else 0.0
+    m = {"det_precision": P, "det_recall": R, "det_f1": 2 * P * R / (P + R) if P + R else 0.0,
+         **{f"recall_{k}": v[0] / v[1] for k, v in rec.items() if v[1]},
+         "n_gt_faces": tp + fn, "gt_unknown_among_matched": n_unknown}
+    if pairs:
+        t, p = [a for a, _ in pairs], [b for _, b in pairs]
+        m.update(pairwise_f1(t, p)); m.update(bcubed(t, p)); m["cluster_purity"] = purity(t, p)
+        m["id_switches"], m["track_fragmentation"] = id_switches(sw_recs)
+    return m
+15. src/vision/phase5.py
+Phase 5 stage: detect, track, cluster, write artifacts, evaluate, gate, CLI.
+ """Phase 5: face detection, within-shot tracking, ArcFace character IDs.

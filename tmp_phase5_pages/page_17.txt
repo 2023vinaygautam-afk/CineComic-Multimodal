@@ -1,0 +1,69 @@
+CineComic-MML - Phase 4 and 5 code
+Page 17
+    def make_track_sheet(self, tracks: list[dict]) -> None:
+        """One crop per track (its best face) labelled track / character / confidence: the 'do CHAR_01 and
+        CHAR_07 look like the same person?' check from the guide."""
+        if not tracks:
+            return
+        cs, best = self.p5["track_sheet"], {tr["track_id"]: max(tr["faces"], key=lambda f: f["q"]) for tr 
+              in tracks}
+        need = defaultdict(list)
+        for tr in tracks:
+            need[best[tr["track_id"]]["idx"]].append(tr)
+        tiles = {}
+        for idx, frame in iter_frames(self.video_path, list(need)):
+            for tr in need[idx]:
+                x0, y0, x1, y1 = best[tr["track_id"]]["box"]
+                mx, my = int(0.2 * (x1 - x0)), int(0.2 * (y1 - y0))
+                crop = frame[max(0, y0 - my): y1 + my, max(0, x0 - mx): x1 + mx]
+                t = cv2.resize(crop, (cs["thumb"], cs["thumb"]))
+                cv2.putText(t, f"{tr['character_id']}", (3, 14), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 255, 
+                      255), 1)
+                cv2.putText(t, f"t{tr['track_id']} s{tr['shot_id']} {tr['id_conf']:.2f}", (3, cs["thumb"] 
+                      - 5),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 0), 1)
+                tiles[tr["track_id"]] = t
+        arr = [tiles[k] for k in sorted(tiles)]
+        if not arr:
+            return
+        while len(arr) % cs["cols"]:
+            arr.append(np.zeros_like(arr[0]))
+        sheet = np.vstack([np.hstack(arr[i:i + cs["cols"]]) for i in range(0, len(arr), cs["cols"])])
+        self.results_dir.mkdir(parents=True, exist_ok=True)
+        cv2.imwrite(str(self.results_dir / f"{self.video_id}_tracks.jpg"), sheet)
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--config", default="configs/phase5.yaml")
+    ap.add_argument("--video", required=True)
+    ap.add_argument("--force", action="store_true")
+    ap.add_argument("--gt", help="labelled faces JSON: {'frames': [{'t', 'faces': [{'box','character','fro
+          ntal'}]}]}")
+    a = ap.parse_args()
+    cfg = yaml.safe_load(open(a.config))
+    Path("logs").mkdir(exist_ok=True)
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s",
+                        handlers=[logging.FileHandler(f"logs/{a.video}.log"), logging.StreamHandler()])
+    gt = json.load(open(a.gt)) if a.gt else None
+    raise SystemExit(0 if Phase5Stage(cfg, a.video).execute(gt, force=a.force) else 1)
+if __name__ == "__main__":
+    main()
+16. tests/test_phase5.py
+Phase 5 tests with a fake detector on a synthetic video.
+ import json
+from pathlib import Path
+import cv2
+import numpy as np
+import pytest
+import yaml
+from src.evaluation.face_metrics import bcubed, id_switches, match_boxes, pairwise_f1, purity
+from src.vision.clustering import constrained_average_linkage
+from src.vision.face_detection import face_quality, mouth_centre
+from src.vision.phase5 import Phase5Stage, build_detection_indices
+FPS, W, H, S = 25, 400, 240, 90
+COL = {"A": (0, 0, 255), "B": (0, 255, 0)}
+def person_emb(name):
+    v = np.random.RandomState({"A": 1, "B": 2}[name]).randn(512)
+    return v / np.linalg.norm(v)
+class FakeAnalyzer:
+    """Finds the solid-colour squares drawn by _make_video and pretends they are faces."""
+    def __init__(self): self.rs = np.random.RandomState(0)

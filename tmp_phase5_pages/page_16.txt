@@ -1,0 +1,77 @@
+CineComic-MML - Phase 4 and 5 code
+Page 16
+                            ]
+            labels = constrained_average_linkage(M, cannot, ip["cluster_threshold"])
+            groups = defaultdict(list)
+            for tr, l in zip(elig, labels):
+                groups[int(l)].append(tr)
+            for members in groups.values():
+                c = np.mean([m["emb"] for m in members], axis=0); c /= np.linalg.norm(c) + 1e-12
+                for m in members:  # confidence: cosine to cluster centroid; singletons fall back to quali
+                      ty
+                    m["id_conf"] = float(m["emb"] @ c) if len(members) > 1 else m["quality"]
+                    m["_cluster"] = id(members)
+            keep = [tr for tr in elig if tr["id_conf"] >= ip["min_id_conf"]]
+            order = {}
+            for tr in sorted(keep, key=lambda t: t["t_start"]):   # CHAR_01.. by first appearance
+                order.setdefault(tr["_cluster"], f"CHAR_{len(order) + 1:02d}")
+                tr["character_id"] = order[tr["_cluster"]]
+        # 4. write artifacts
+        track_char = {tr["track_id"]: tr["character_id"] for tr in tracks}
+        for d in (self.faces_path, self.emb_path, self.out):
+            d.parent.mkdir(parents=True, exist_ok=True)
+        np.save(self.emb_path, E)
+        self.faces_path.write_text(json.dumps({
+            "video_id": self.video_id, "n_faces": len(faces), "frame_space": "original",
+            "faces": [{**{k: v for k, v in f.items()}, "emb_idx": f["face_idx"]} for f in faces]}))
+        self.out.write_text(json.dumps({
+            "video_id": self.video_id, "config_hash": self.cache_key(), "emb_file": self.emb_path.as_posix
+                  (),
+            "tracks": [{
+                "track_id": tr["track_id"], "shot_id": tr["shot_id"], "character_id": tr["character_id"],
+                "id_conf": round(tr["id_conf"], 3), "quality": round(tr["quality"], 3), "n_faces": len(tr[
+                      "faces"]),
+                "t_start": tr["t_start"], "t_end": tr["t_end"],
+                "frames": [{"t": f["t"], "box": f["box"], "mouth": f["mouth"], "emb_idx": f["face_idx"],
+                            "det": f["det"], "q": f["q"]} for f in tr["faces"]]} for tr in tracks],
+        }, indent=1))
+        self.make_track_sheet(tracks)
+        self._track_char = track_char
+    # ------------------------------------------------------------- evaluate
+    def evaluate(self, gt: dict | None = None) -> dict:
+        td = json.loads(self.out.read_text()); fd = json.loads(self.faces_path.read_text())
+        shots = json.loads(self.shots_path.read_text())["shots"]
+        tracks, faces = td["tracks"], fd["faces"]
+        n = max(1, len(faces))
+        unk_faces = sum(tr["n_faces"] for tr in tracks if tr["character_id"] == UNKNOWN)
+        m = {"n_faces": len(faces), "n_tracks": len(tracks),
+             "n_characters": len({tr["character_id"] for tr in tracks} - {UNKNOWN}),
+             "unknown_rate": unk_faces / n,
+             "mean_faces_per_track": float(np.mean([tr["n_faces"] for tr in tracks])) if tracks else 0.0,
+             **check_invariants(tracks, shots)}
+        if gt:
+            tid = {tr["track_id"]: tr["character_id"] for tr in tracks}
+            m.update(evaluate_against_gt(gt, faces, tid, self.p5["eval"]))
+        return m
+    def gate(self, m: dict) -> tuple[bool, str]:
+        g, fails = self.p5["gate"], []
+        if m["tracks_spanning_shots"]: fails.append("a track spans a shot boundary")
+        if m["same_time_same_character"]: fails.append("simultaneous tracks share a character_id")
+        r = m.get("recall_medium_large_frontal")
+        if r is not None and r < g["medium_large_frontal_recall"]: fails.append(f"recall(medium/large fron
+              tal) {r:.2f}")
+        if "id_switches" in m and m["id_switches"] > g["max_id_switches"]: fails.append(f"{m['id_switches'
+              ]} ID switches")
+        if "cluster_purity" in m and m["cluster_purity"] < g["cluster_purity"]: fails.append(f"purity {m['
+              cluster_purity']:.2f}")
+        return (not fails, "; ".join(fails) or "all gates passed")
+    def execute(self, gt=None, force=False) -> bool:
+        t0 = time.time()
+        self.run(force=force)
+        m = self.evaluate(gt)
+        ok, why = self.gate(m)
+        m.update(runtime_s=time.time() - t0, passed=ok, reason=why, cfg=self.cache_key())
+        self.metrics_path.write_text(json.dumps(m, indent=2))
+        log.info("metrics: %s", json.dumps(m))
+        return ok
+    # ------------------------------------------------------ visual inspection

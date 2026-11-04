@@ -1,0 +1,64 @@
+CineComic-MML - Phase 4 and 5 code
+Page 3
+        return full
+    return [x0, y0, x1, y1]
+def detect_black_bars(video_path, n_samples=30, thresh=16.0, min_keep_frac=0.5) -> list[int]:
+    cap = cv2.VideoCapture(str(video_path))
+    n = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    W = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)); H = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    idxs = (np.linspace(0, n - 1, n_samples + 2)[1:-1] if n > n_samples else np.arange(n)).astype(int)
+    grays = []
+    for i in idxs:
+        cap.set(cv2.CAP_PROP_POS_FRAMES, int(i))
+        ok, f = cap.read()
+        if ok:
+            grays.append(cv2.cvtColor(f, cv2.COLOR_BGR2GRAY))
+    cap.release()
+    if not grays:
+        return [0, 0, W, H]
+    return crop_from_gray_frames(grays, thresh, min_keep_frac)
+4. src/video/shot_detection.py
+Shot boundary detection with PySceneDetect.
+ """Shot boundary detection with PySceneDetect. Returns [{'shot_id', 'start', 'end'}] in seconds."""
+from __future__ import annotations
+from scenedetect import detect, ContentDetector, AdaptiveDetector
+def detect_shots(video_path, duration_s: float, fps: float, detector="content",
+                 threshold=27.0, min_scene_len_s=0.5) -> list[dict]:
+    min_len = max(1, int(round(min_scene_len_s * fps)))
+    if detector == "adaptive":
+        det = AdaptiveDetector(adaptive_threshold=threshold, min_scene_len=min_len)
+    else:
+        det = ContentDetector(threshold=threshold, min_scene_len=min_len)
+    scenes = detect(str(video_path), det)
+    if not scenes:  # no cut found: the whole video is one shot
+        return [{"shot_id": 0, "start": 0.0, "end": float(duration_s)}]
+    shots = [{"shot_id": k, "start": s.get_seconds(), "end": e.get_seconds()}
+             for k, (s, e) in enumerate(scenes)]
+    shots[0]["start"] = 0.0
+    shots[-1]["end"] = float(duration_s)
+    return shots
+5. src/video/quality_filter.py
+Sharpness, brightness, pHash; dark, blur and duplicate filters.
+ """Per-frame quality statistics and the relative blur / duplicate / dark filters."""
+from __future__ import annotations
+from collections import defaultdict
+import cv2
+import imagehash
+import numpy as np
+from PIL import Image
+def frame_stats(crop_bgr: np.ndarray, border_thresh: float = 16.0) -> dict:
+    gray = cv2.cvtColor(crop_bgr, cv2.COLOR_BGR2GRAY)
+    ph = imagehash.phash(Image.fromarray(cv2.cvtColor(crop_bgr, cv2.COLOR_BGR2RGB)))
+    return {
+        "sharp": float(cv2.Laplacian(gray, cv2.CV_64F).var()),
+        "brightness": float(gray.mean()),
+        "contrast": float(gray.std()),
+        "phash": str(ph),
+        "border_dark": has_black_bars(gray, border_thresh),
+    }
+def has_black_bars(gray: np.ndarray, thresh: float = 16.0) -> bool:
+    return bool(gray[0].mean() < thresh or gray[-1].mean() < thresh
+                or gray[:, 0].mean() < thresh or gray[:, -1].mean() < thresh)
+def hamming_hex(a: str, b: str) -> int:
+    return bin(int(a, 16) ^ int(b, 16)).count("1")
+def apply_filters(frames: list[dict], q: dict) -> None:
