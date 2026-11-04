@@ -1,0 +1,461 @@
+{
+  "phase": 8,
+  "video_id": "a13eb5bedd6d",
+  "selection_method": "Fixed: dialogue-first + temporally-spread visual panels",
+  "panels": [
+    {
+      "frame_id": "s00_f002",
+      "path": "data/frames/a13eb5bedd6d/shot_000/s00_f002.jpg",
+      "t": 1.001,
+      "timestamp_source": "shots_json",
+      "segment_ids": [],
+      "character_id": null,
+      "speaker_ids": [],
+      "group_id": "visual:shot:0",
+      "scores": {
+        "sem": 0.0,
+        "spk": 0.0,
+        "q": 1.0,
+        "sal": 0.5,
+        "motion": 0.2,
+        "div": 0.8131358203689366,
+        "total": 0.731822238332043
+      },
+      "branch": "visual",
+      "order": 1
+    },
+    {
+      "frame_id": "s01_f002",
+      "path": "data/frames/a13eb5bedd6d/shot_001/s01_f002.jpg",
+      "t": 4.963,
+      "timestamp_source": "shots_json",
+      "segment_ids": [],
+      "character_id": null,
+      "speaker_ids": [],
+      "group_id": "visual:shot:1",
+      "scores": {
+        "sem": 0.0,
+        "spk": 0.0,
+        "q": 0.6192709999999999,
+        "sal": 0.5,
+        "motion": 0.2,
+        "div": 0.41698326598994867,
+        "total": 0.3752849393909538
+      },
+      "branch": "visual",
+      "order": 2
+    },
+    {
+      "frame_id": "s02_f001",
+      "path": "data/frames/a13eb5bedd6d/shot_002/s02_f001.jpg",
+      "t": 8.8,
+      "timestamp_source": "shots_json",
+      "segment_ids": [
+        "1"
+      ],
+      "character_id": "CHAR_02",
+      "speaker_ids": [
+        "SPEAKER_00"
+      ],
+      "group_id": "dialogue:2:1",
+      "scores": {
+        "sem": 0.5589299999999999,
+        "spk": 0.6724,
+        "q": 0.063209,
+        "sal": 0.5,
+        "motion": 0.1,
+        "div": 1.0,
+        "total": 0.7
+      },
+      "branch": "dialogue",
+      "order": 3
+    },
+    {
+      "frame_id": "s02_f005",
+      "path": "data/frames/a13eb5bedd6d/shot_002/s02_f005.jpg",
+      "t": 10.802,
+      "timestamp_source": "shots_json",
+      "segment_ids": [
+        "2"
+      ],
+      "character_id": null,
+      "speaker_ids": [],
+      "group_id": "dialogue:2:2",
+      "scores": {
+        "sem": 0.49472000000000016,
+        "spk": 0.0,
+        "q": 0.053073,
+        "sal": 0.5,
+        "motion": 0.1,
+        "div": 1.0,
+        "total": 0.7
+      },
+      "branch": "dialogue",
+      "order": 4
+    },
+    {
+      "frame_id": "s09_f000",
+      "path": "data/frames/a13eb5bedd6d/shot_009/s09_f000.jpg",
+      "t": 53.553,
+      "timestamp_source": "shots_json",
+      "segment_ids": [],
+      "character_id": null,
+      "speaker_ids": [],
+      "group_id": "visual:shot:9",
+      "scores": {
+        "sem": 0.0,
+        "spk": 0.0,
+        "q": 0.24568600000000002,
+        "sal": 0.5,
+        "motion": 0.2,
+        "div": 0.7368528999999999,
+        "total": 0.6631676099999999
+      },
+      "branch": "visual",
+      "order": 5
+    },
+    {
+      "frame_id": "s13_f002",
+      "path": "data/frames/a13eb5bedd6d/shot_013/s13_f002.jpg",
+      "t": 59.685,
+      "timestamp_source": "shots_json",
+      "segment_ids": [],
+      "character_id": null,
+      "speaker_ids": [],
+      "group_id": "visual:shot:13",
+      "scores": {
+        "sem": 0.0,
+        "spk": 0.0,
+        "q": 0.090372,
+        "sal": 0.5,
+        "motion": 0.2,
+        "div": 0.5314958368127096,
+        "total": 0.4783462531314387
+      },
+      "branch": "visual",
+      "order": 6
+    },
+    {
+      "frame_id": "s15_f001",
+      "path": "data/frames/a13eb5bedd6d/shot_015/s15_f001.jpg",
+      "t": 66.066,
+      "timestamp_source": "shots_json",
+      "segment_ids": [
+        "3"
+      ],
+      "character_id": "CHAR_07",
+      "speaker_ids": [
+        "SPEAKER_02"
+      ],
+      "group_id": "dialogue:15:3",
+      "scores": {
+        "sem": 0.74962,
+        "spk": 0.8671,
+        "q": 0.112337,
+        "sal": 0.5,
+        "motion": 0.1,
+        "div": 1.0,
+        "total": 0.7
+      },
+      "branch": "dialogue",
+      "order": 7
+    },
+    {
+      "frame_id": "s16_f005",
+      "path": "data/frames/a13eb5bedd6d/shot_016/s16_f005.jpg",
+      "t": 68.902,
+      "timestamp_source": "shots_json",
+      "segment_ids": [
+        "4"
+      ],
+      "character_id": "CHAR_02",
+      "speaker_ids": [
+        "SPEAKER_02"
+      ],
+      "group_id": "dialogue:16:4",
+      "scores": {
+        "sem": 0.64826,
+        "spk": 0.608,
+        "q": 0.06767000000000001,
+        "sal": 0.5,
+        "motion": 0.1,
+        "div": 1.0,
+        "total": 0.7
+      },
+      "branch": "dialogue",
+      "order": 8
+    },
+    {
+      "frame_id": "s17_f001",
+      "path": "data/frames/a13eb5bedd6d/shot_017/s17_f001.jpg",
+      "t": 69.444,
+      "timestamp_source": "shots_json",
+      "segment_ids": [
+        "5"
+      ],
+      "character_id": "CHAR_07",
+      "speaker_ids": [
+        "SPEAKER_02"
+      ],
+      "group_id": "dialogue:17:5",
+      "scores": {
+        "sem": 0.4815,
+        "spk": 0.9808,
+        "q": 0.100679,
+        "sal": 0.5,
+        "motion": 0.1,
+        "div": 1.0,
+        "total": 0.7
+      },
+      "branch": "dialogue",
+      "order": 9
+    },
+    {
+      "frame_id": "s17_f005",
+      "path": "data/frames/a13eb5bedd6d/shot_017/s17_f005.jpg",
+      "t": 71.446,
+      "timestamp_source": "shots_json",
+      "segment_ids": [
+        "6"
+      ],
+      "character_id": "CHAR_07",
+      "speaker_ids": [
+        "SPEAKER_02"
+      ],
+      "group_id": "dialogue:17:6",
+      "scores": {
+        "sem": 0.5358299999999999,
+        "spk": 0.9808,
+        "q": 0.09937399999999999,
+        "sal": 0.5,
+        "motion": 0.1,
+        "div": 1.0,
+        "total": 0.7
+      },
+      "branch": "dialogue",
+      "order": 10
+    },
+    {
+      "frame_id": "s18_f002",
+      "path": "data/frames/a13eb5bedd6d/shot_018/s18_f002.jpg",
+      "t": 74.032,
+      "timestamp_source": "shots_json",
+      "segment_ids": [
+        "7"
+      ],
+      "character_id": null,
+      "speaker_ids": [],
+      "group_id": "dialogue:18:7",
+      "scores": {
+        "sem": 0.25478,
+        "spk": 0.0,
+        "q": 0.07492700000000001,
+        "sal": 0.5,
+        "motion": 0.1,
+        "div": 1.0,
+        "total": 0.7
+      },
+      "branch": "dialogue",
+      "order": 11
+    },
+    {
+      "frame_id": "s21_f001",
+      "path": "data/frames/a13eb5bedd6d/shot_021/s21_f001.jpg",
+      "t": 81.915,
+      "timestamp_source": "shots_json",
+      "segment_ids": [
+        "9"
+      ],
+      "character_id": null,
+      "speaker_ids": [],
+      "group_id": "dialogue:21:9",
+      "scores": {
+        "sem": 0.49046000000000006,
+        "spk": 0.0,
+        "q": 0.327558,
+        "sal": 0.5,
+        "motion": 0.1,
+        "div": 1.0,
+        "total": 0.7
+      },
+      "branch": "dialogue",
+      "order": 12
+    },
+    {
+      "frame_id": "s24_f003",
+      "path": "data/frames/a13eb5bedd6d/shot_024/s24_f003.jpg",
+      "t": 86.837,
+      "timestamp_source": "shots_json",
+      "segment_ids": [],
+      "character_id": null,
+      "speaker_ids": [],
+      "group_id": "visual:shot:24",
+      "scores": {
+        "sem": 0.0,
+        "spk": 0.0,
+        "q": 0.18335300000000002,
+        "sal": 0.5,
+        "motion": 0.2,
+        "div": 0.443240207206809,
+        "total": 0.39891618648612814
+      },
+      "branch": "visual",
+      "order": 13
+    },
+    {
+      "frame_id": "s29_f004",
+      "path": "data/frames/a13eb5bedd6d/shot_029/s29_f004.jpg",
+      "t": 96.638,
+      "timestamp_source": "shots_json",
+      "segment_ids": [],
+      "character_id": null,
+      "speaker_ids": [],
+      "group_id": "visual:shot:29",
+      "scores": {
+        "sem": 0.0,
+        "spk": 0.0,
+        "q": 0.193107,
+        "sal": 0.5,
+        "motion": 0.2,
+        "div": 0.7289660499999999,
+        "total": 0.656069445
+      },
+      "branch": "visual",
+      "order": 14
+    },
+    {
+      "frame_id": "s36_f000",
+      "path": "data/frames/a13eb5bedd6d/shot_036/s36_f000.jpg",
+      "t": 105.147,
+      "timestamp_source": "shots_json",
+      "segment_ids": [],
+      "character_id": "CHAR_17",
+      "speaker_ids": [
+        "SPEAKER_03"
+      ],
+      "group_id": "visual:shot:36",
+      "scores": {
+        "sem": 0.0,
+        "spk": 0.8237,
+        "q": 0.397648,
+        "sal": 0.5,
+        "motion": 0.2,
+        "div": 0.7596472,
+        "total": 0.68368248
+      },
+      "branch": "visual",
+      "order": 15
+    },
+    {
+      "frame_id": "s40_f003",
+      "path": "data/frames/a13eb5bedd6d/shot_040/s40_f003.jpg",
+      "t": 111.32,
+      "timestamp_source": "shots_json",
+      "segment_ids": [],
+      "character_id": null,
+      "speaker_ids": [],
+      "group_id": "visual:shot:40",
+      "scores": {
+        "sem": 0.0,
+        "spk": 0.0,
+        "q": 0.094284,
+        "sal": 0.5,
+        "motion": 0.2,
+        "div": 0.5002392914313676,
+        "total": 0.45021536228823084
+      },
+      "branch": "visual",
+      "order": 16
+    },
+    {
+      "frame_id": "s45_f000",
+      "path": "data/frames/a13eb5bedd6d/shot_045/s45_f000.jpg",
+      "t": 117.075,
+      "timestamp_source": "shots_json",
+      "segment_ids": [
+        "10"
+      ],
+      "character_id": "CHAR_02",
+      "speaker_ids": [
+        "SPEAKER_01"
+      ],
+      "group_id": "dialogue:45:10",
+      "scores": {
+        "sem": 0.11443000000000009,
+        "spk": 0.9117,
+        "q": 0.06551699999999999,
+        "sal": 0.5,
+        "motion": 0.1,
+        "div": 1.0,
+        "total": 0.7
+      },
+      "branch": "dialogue",
+      "order": 17
+    },
+    {
+      "frame_id": "s55_f000",
+      "path": "data/frames/a13eb5bedd6d/shot_055/s55_f000.jpg",
+      "t": 126.418,
+      "timestamp_source": "shots_json",
+      "segment_ids": [],
+      "character_id": null,
+      "speaker_ids": [],
+      "group_id": "visual:shot:55",
+      "scores": {
+        "sem": 0.0,
+        "spk": 0.0,
+        "q": 0.224216,
+        "sal": 0.5,
+        "motion": 0.2,
+        "div": 0.7336324,
+        "total": 0.66026916
+      },
+      "branch": "visual",
+      "order": 18
+    },
+    {
+      "frame_id": "s60_f000",
+      "path": "data/frames/a13eb5bedd6d/shot_060/s60_f000.jpg",
+      "t": 132.883,
+      "timestamp_source": "shots_json",
+      "segment_ids": [],
+      "character_id": null,
+      "speaker_ids": [],
+      "group_id": "visual:shot:60",
+      "scores": {
+        "sem": 0.0,
+        "spk": 0.0,
+        "q": 0.144725,
+        "sal": 0.5,
+        "motion": 0.2,
+        "div": 0.5290061833165576,
+        "total": 0.4761055649849018
+      },
+      "branch": "visual",
+      "order": 19
+    },
+    {
+      "frame_id": "s62_f000",
+      "path": "data/frames/a13eb5bedd6d/shot_062/s62_f000.jpg",
+      "t": 138.889,
+      "timestamp_source": "shots_json",
+      "segment_ids": [],
+      "character_id": null,
+      "speaker_ids": [],
+      "group_id": "visual:shot:62",
+      "scores": {
+        "sem": 0.0,
+        "spk": 0.0,
+        "q": 0.123184,
+        "sal": 0.5,
+        "motion": 0.2,
+        "div": 0.7184775999999999,
+        "total": 0.64662984
+      },
+      "branch": "visual",
+      "order": 20
+    }
+  ],
+  "groups": [],
+  "metrics_path": "results/phase8/a13eb5bedd6d_metrics.json"
+}

@@ -1,0 +1,581 @@
+
+  src\speaker\phase7.py:40:# =========================================================
+  src\speaker\phase7.py:41:
+> src\speaker\phase7.py:42:def read_json(path: Path) -> Any:
+  src\speaker\phase7.py:43:    """Read a JSON file and return its decoded content."""
+  src\speaker\phase7.py:44:    if not path.exists():
+  src\speaker\phase7.py:45:        raise FileNotFoundError(f"Required input file not found: {path}")
+  src\speaker\phase7.py:46:
+  src\speaker\phase7.py:49:
+  src\speaker\phase7.py:50:
+> src\speaker\phase7.py:51:def write_json(path: Path, data: dict) -> None:
+  src\speaker\phase7.py:52:    """Write JSON safely by writing to a temporary file first."""
+  src\speaker\phase7.py:53:    path.parent.mkdir(parents=True, exist_ok=True)
+  src\speaker\phase7.py:54:
+  src\speaker\phase7.py:55:    temporary_path = path.with_suffix(path.suffix + ".tmp")
+  src\speaker\phase7.py:61:
+  src\speaker\phase7.py:62:
+> src\speaker\phase7.py:63:def expand_template(template: str, video_id: str) -> Path:
+  src\speaker\phase7.py:64:    """Expand a path template containing {video_id}."""
+  src\speaker\phase7.py:65:    return Path(str(template).format(video_id=video_id))
+  src\speaker\phase7.py:66:
+  src\speaker\phase7.py:67:
+> src\speaker\phase7.py:68:def first_value(
+  src\speaker\phase7.py:69:    item: dict,
+  src\speaker\phase7.py:70:    names: tuple[str, ...],
+  src\speaker\phase7.py:71:    default: Any = None,
+  src\speaker\phase7.py:72:) -> Any:
+  src\speaker\phase7.py:82:
+  src\speaker\phase7.py:83:
+> src\speaker\phase7.py:84:def as_float(value: Any, default: Any = None) -> Any:
+  src\speaker\phase7.py:85:    """Convert a value to a finite float."""
+  src\speaker\phase7.py:86:    try:
+  src\speaker\phase7.py:87:        number = float(value)
+  src\speaker\phase7.py:88:        if np.isfinite(number):
+  src\speaker\phase7.py:94:
+  src\speaker\phase7.py:95:
+> src\speaker\phase7.py:96:def normalize_label(value: Any) -> str:
+  src\speaker\phase7.py:97:    """Normalize a label for case-insensitive comparisons."""
+  src\speaker\phase7.py:98:    if value is None:
+  src\speaker\phase7.py:99:        return ""
+  src\speaker\phase7.py:100:
+  src\speaker\phase7.py:102:
+  src\speaker\phase7.py:103:
+> src\speaker\phase7.py:104:def is_unknown(value: Any, unknown_label: str = "unknown") -> bool:
+  src\speaker\phase7.py:105:    """Check whether a value represents an unknown identity."""
+  src\speaker\phase7.py:106:    return normalize_label(value) in {
+  src\speaker\phase7.py:107:        "",
+  src\speaker\phase7.py:108:        "unknown",
+  src\speaker\phase7.py:115:
+  src\speaker\phase7.py:116:
+> src\speaker\phase7.py:117:def valid_character_id(
+  src\speaker\phase7.py:118:    value: Any,
+  src\speaker\phase7.py:119:    unknown_label: str = "unknown",
+  src\speaker\phase7.py:120:) -> bool:
+  src\speaker\phase7.py:121:    """Return True if the value represents a usable character ID."""
+  src\speaker\phase7.py:123:
+  src\speaker\phase7.py:124:
+> src\speaker\phase7.py:125:def derive_character_id(track_id: Any) -> str:
+  src\speaker\phase7.py:126:    """Generate a stable fallback character ID from a track ID."""
+  src\speaker\phase7.py:127:    safe_track = re.sub(
+  src\speaker\phase7.py:128:        r"[^A-Za-z0-9_-]",
+  src\speaker\phase7.py:129:        "_",
+> src\speaker\phase7.py:130:        str(track_id),
+  src\speaker\phase7.py:131:    )
+  src\speaker\phase7.py:132:
+  src\speaker\phase7.py:133:    return f"CHAR_{safe_track}"
+  src\speaker\phase7.py:134:
+  src\speaker\phase7.py:138:# =========================================================
+  src\speaker\phase7.py:139:
+> src\speaker\phase7.py:140:def normalize_speaker(value: Any) -> str:
+  src\speaker\phase7.py:141:    """Normalize missing or ambiguous speaker labels."""
+  src\speaker\phase7.py:142:    if value is None:
+  src\speaker\phase7.py:143:        return "unknown"
+  src\speaker\phase7.py:144:
+  src\speaker\phase7.py:158:
+  src\speaker\phase7.py:159:
+> src\speaker\phase7.py:160:def parse_turns(data: dict) -> list[dict]:
+  src\speaker\phase7.py:161:    """
+  src\speaker\phase7.py:162:    Parse speaker turns from common diarization JSON structures.
+  src\speaker\phase7.py:163:
+  src\speaker\phase7.py:164:    Supported top-level collections:
+  src\speaker\phase7.py:292:# =========================================================
+  src\speaker\phase7.py:293:
+> src\speaker\phase7.py:294:def get_bbox(item: dict) -> list[float] | None:
+  src\speaker\phase7.py:295:    """
+  src\speaker\phase7.py:296:    Extract a bounding box.
+  src\speaker\phase7.py:297:
+  src\speaker\phase7.py:298:    Supported forms:
+  src\speaker\phase7.py:347:
+  src\speaker\phase7.py:348:
+> src\speaker\phase7.py:349:def extract_track_objects(data: dict) -> list[dict]:
+  src\speaker\phase7.py:350:    """
+  src\speaker\phase7.py:351:    Convert face-track JSON into a normalized representation.
+  src\speaker\phase7.py:352:
+  src\speaker\phase7.py:353:    Supported collections:
+  src\speaker\phase7.py:357:
+  src\speaker\phase7.py:358:    Each normalized track has:
+> src\speaker\phase7.py:359:        track_id, start, end, identity, track_confidence, detections
+  src\speaker\phase7.py:360:    """
+  src\speaker\phase7.py:361:    raw_tracks = data.get(
+  src\speaker\phase7.py:362:        "tracks",
+  src\speaker\phase7.py:363:        data.get("track_summaries", []),
+  src\speaker\phase7.py:372:
+  src\speaker\phase7.py:373:            track = dict(value)
+> src\speaker\phase7.py:374:            track.setdefault("track_id", key)
+  src\speaker\phase7.py:375:            entries.append(track)
+  src\speaker\phase7.py:376:
+  src\speaker\phase7.py:377:        raw_tracks = entries
+  src\speaker\phase7.py:378:
+  src\speaker\phase7.py:388:            continue
+  src\speaker\phase7.py:389:
+> src\speaker\phase7.py:390:        track_id = str(
+  src\speaker\phase7.py:391:            first_value(
+  src\speaker\phase7.py:392:                track,
+> src\speaker\phase7.py:393:                ("track_id", "id", "character_track_id"),
+  src\speaker\phase7.py:394:                f"T{index + 1:04d}",
+  src\speaker\phase7.py:395:            )
+  src\speaker\phase7.py:396:        )
+  src\speaker\phase7.py:397:
+  src\speaker\phase7.py:524:            track,
+  src\speaker\phase7.py:525:            (
+> src\speaker\phase7.py:526:                "character_id",
+  src\speaker\phase7.py:527:                "identity_id",
+  src\speaker\phase7.py:528:                "identity",
+  src\speaker\phase7.py:529:                "person_id",
+  src\speaker\phase7.py:530:            ),
+  src\speaker\phase7.py:532:
+  src\speaker\phase7.py:533:        normalized_tracks.append({
+> src\speaker\phase7.py:534:            "track_id": track_id,
+  src\speaker\phase7.py:535:            "start": track_start,
+  src\speaker\phase7.py:536:            "end": track_end,
+  src\speaker\phase7.py:537:            "identity": identity,
+  src\speaker\phase7.py:538:            "track_confidence": max(
+  src\speaker\phase7.py:556:# =========================================================
+  src\speaker\phase7.py:557:
+> src\speaker\phase7.py:558:def overlap_seconds(
+  src\speaker\phase7.py:559:    a_start: float,
+  src\speaker\phase7.py:560:    a_end: float,
+  src\speaker\phase7.py:561:    b_start: float,
+  src\speaker\phase7.py:562:    b_end: float,
+  src\speaker\phase7.py:569:
+  src\speaker\phase7.py:570:
+> src\speaker\phase7.py:571:def track_time_bounds(track: dict, fps: float) -> tuple[float, float] | None:
+  src\speaker\phase7.py:572:    """Get a track's time bounds, deriving them from detections if needed."""
+  src\speaker\phase7.py:573:    start = as_float(track.get("start"))
+  src\speaker\phase7.py:574:    end = as_float(track.get("end"))
+  src\speaker\phase7.py:575:
+  src\speaker\phase7.py:606:
+  src\speaker\phase7.py:607:
+> src\speaker\phase7.py:608:def overlap_ratio(
+  src\speaker\phase7.py:609:    turn: dict,
+  src\speaker\phase7.py:610:    track: dict,
+  src\speaker\phase7.py:611:    fps: float = 0.0,
+  src\speaker\phase7.py:612:) -> float:
+  src\speaker\phase7.py:643:# =========================================================
+  src\speaker\phase7.py:644:
+> src\speaker\phase7.py:645:def sample_times(
+  src\speaker\phase7.py:646:    start: float,
+  src\speaker\phase7.py:647:    end: float,
+  src\speaker\phase7.py:648:    sample_fps: float,
+  src\speaker\phase7.py:649:) -> list[float]:
+  src\speaker\phase7.py:659:
+  src\speaker\phase7.py:660:
+> src\speaker\phase7.py:661:def crop_mouth(
+  src\speaker\phase7.py:662:    frame: np.ndarray,
+  src\speaker\phase7.py:663:    bbox: list[float],
+  src\speaker\phase7.py:664:    mouth_fraction: float,
+  src\speaker\phase7.py:665:) -> np.ndarray | None:
+  src\speaker\phase7.py:706:
+  src\speaker\phase7.py:707:
+> src\speaker\phase7.py:708:def compute_mouth_motion(
+  src\speaker\phase7.py:709:    video_path: Path,
+  src\speaker\phase7.py:710:    track: dict,
+  src\speaker\phase7.py:711:    turn: dict,
+  src\speaker\phase7.py:712:    fps: float,
+  src\speaker\phase7.py:871:# =========================================================
+  src\speaker\phase7.py:872:
+> src\speaker\phase7.py:873:def minmax_normalize(values: list[float]) -> list[float]:
+  src\speaker\phase7.py:874:    """Min-max normalize values to the range [0, 1]."""
+  src\speaker\phase7.py:875:    if not values:
+  src\speaker\phase7.py:876:        return []
+  src\speaker\phase7.py:877:
+  src\speaker\phase7.py:888:
+  src\speaker\phase7.py:889:
+> src\speaker\phase7.py:890:def reliable_match(
+  src\speaker\phase7.py:891:    match: dict,
+  src\speaker\phase7.py:892:    min_score: float,
+  src\speaker\phase7.py:893:    unknown_label: str = "unknown",
+  src\speaker\phase7.py:894:) -> bool:
+  src\speaker\phase7.py:897:        return False
+  src\speaker\phase7.py:898:
+> src\speaker\phase7.py:899:    character_id = match.get(
+> src\speaker\phase7.py:900:        "visual_character_id",
+> src\speaker\phase7.py:901:        match.get("character_id"),
+  src\speaker\phase7.py:902:    )
+  src\speaker\phase7.py:903:
+> src\speaker\phase7.py:904:    if not valid_character_id(character_id, unknown_label):
+  src\speaker\phase7.py:905:        return False
+  src\speaker\phase7.py:906:
+  src\speaker\phase7.py:907:    try:
+  src\speaker\phase7.py:908:        score = float(match.get("match_score", 0.0))
+  src\speaker\phase7.py:913:
+  src\speaker\phase7.py:914:
+> src\speaker\phase7.py:915:def build_speaker_mapping(
+  src\speaker\phase7.py:916:    matches: list[dict],
+  src\speaker\phase7.py:917:    min_score: float,
+  src\speaker\phase7.py:918:    unknown_label: str,
+  src\speaker\phase7.py:919:    minimum_evidence_turns: int,
+  src\speaker\phase7.py:922:) -> tuple[dict, list[dict], dict]:
+  src\speaker\phase7.py:923:    """
+> src\speaker\phase7.py:924:    Build a conservative speaker-to-character mapping.
+  src\speaker\phase7.py:925:
+  src\speaker\phase7.py:926:    Only accepted original visual matches contribute evidence.
+  src\speaker\phase7.py:927:    Corrections are applied later, so they cannot feed back into votes.
+  src\speaker\phase7.py:928:    """
+  src\speaker\phase7.py:934:        speaker_turn_counts[speaker] += 1
+  src\speaker\phase7.py:935:
+> src\speaker\phase7.py:936:        if not reliable_match(match, min_score, unknown_label):
+  src\speaker\phase7.py:937:            continue
+  src\speaker\phase7.py:938:
+> src\speaker\phase7.py:939:        character_id = str(match["visual_character_id"])
+  src\speaker\phase7.py:940:        score = float(match["match_score"])
+  src\speaker\phase7.py:941:
+> src\speaker\phase7.py:942:        speaker_votes[speaker][character_id] += score
+  src\speaker\phase7.py:943:
+> src\speaker\phase7.py:944:    accepted_mapping = {}
+> src\speaker\phase7.py:945:    mapping_records = []
+  src\speaker\phase7.py:946:
+  src\speaker\phase7.py:947:    for speaker, votes in sorted(speaker_votes.items()):
+  src\speaker\phase7.py:948:        ranked_votes = sorted(
+  src\speaker\phase7.py:949:            votes.items(),
+  src\speaker\phase7.py:977:            if (
+  src\speaker\phase7.py:978:                match["speaker"] == speaker
+> src\speaker\phase7.py:979:                and str(match.get("visual_character_id", ""))
+  src\speaker\phase7.py:980:                == best_character
+> src\speaker\phase7.py:981:                and reliable_match(
+  src\speaker\phase7.py:982:                    match,
+  src\speaker\phase7.py:983:                    min_score,
+  src\speaker\phase7.py:984:                    unknown_label,
+  src\speaker\phase7.py:985:                )
+  src\speaker\phase7.py:994:
+  src\speaker\phase7.py:995:        if accepted:
+> src\speaker\phase7.py:996:            accepted_mapping[speaker] = best_character
+  src\speaker\phase7.py:997:
+> src\speaker\phase7.py:998:        mapping_records.append({
+  src\speaker\phase7.py:999:            "speaker_id": speaker,
+> src\speaker\phase7.py:1000:            "character_id": best_character,
+  src\speaker\phase7.py:1001:            "evidence_weight": round(float(best_weight), 4),
+  src\speaker\phase7.py:1002:            "dominance": round(float(dominance), 4),
+  src\speaker\phase7.py:1003:            "relative_margin": round(float(relative_margin), 4),
+  src\speaker\phase7.py:1004:            "reliable_evidence_turns": evidence_turns,
+> src\speaker\phase7.py:1005:            "mapping_accepted": accepted,
+  src\speaker\phase7.py:1006:            "matched_turns": sum(
+  src\speaker\phase7.py:1007:                1
+  src\speaker\phase7.py:1008:                for match in matches
+  src\speaker\phase7.py:1009:                if (
+  src\speaker\phase7.py:1010:                    match["speaker"] == speaker
+> src\speaker\phase7.py:1011:                    and str(match.get("visual_character_id", ""))
+  src\speaker\phase7.py:1012:                    == best_character
+  src\speaker\phase7.py:1013:                )
+  src\speaker\phase7.py:1014:            ),
+  src\speaker\phase7.py:1015:            "total_turns": speaker_turn_counts[speaker],
+  src\speaker\phase7.py:1016:        })
+  src\speaker\phase7.py:1017:
+> src\speaker\phase7.py:1018:    return accepted_mapping, mapping_records, speaker_turn_counts
+  src\speaker\phase7.py:1019:
+  src\speaker\phase7.py:1020:
+  src\speaker\phase7.py:1021:# =========================================================
+  src\speaker\phase7.py:1022:# 7. MAIN PHASE 7 MATCHING ENGINE
+  src\speaker\phase7.py:1023:# =========================================================
+  src\speaker\phase7.py:1024:
+> src\speaker\phase7.py:1025:def run_phase7(config_path: Path, video_id: str) -> dict:
+  src\speaker\phase7.py:1026:    started = time.perf_counter()
+  src\speaker\phase7.py:1027:
+  src\speaker\phase7.py:1028:    if not config_path.exists():
+  src\speaker\phase7.py:1029:        raise FileNotFoundError(
+  src\speaker\phase7.py:1035:
+  src\speaker\phase7.py:1036:    if not isinstance(config_data, dict):
+> src\speaker\phase7.py:1037:        raise ValueError("Phase 7 YAML must contain a mapping/object.")
+  src\speaker\phase7.py:1038:
+  src\speaker\phase7.py:1039:    config = config_data.get("phase7", config_data)
+  src\speaker\phase7.py:1040:
+  src\speaker\phase7.py:1041:    if not isinstance(config, dict):
+  src\speaker\phase7.py:1042:        raise ValueError(
+> src\speaker\phase7.py:1043:            "The 'phase7' configuration section must be a mapping."
+  src\speaker\phase7.py:1044:        )
+  src\speaker\phase7.py:1045:
+  src\speaker\phase7.py:1046:    required_templates = (
+  src\speaker\phase7.py:1047:        "video_template",
+  src\speaker\phase7.py:1174:    )
+  src\speaker\phase7.py:1175:
+> src\speaker\phase7.py:1176:    # Speaker mapping thresholds.
+  src\speaker\phase7.py:1177:    minimum_evidence_turns = int(
+> src\speaker\phase7.py:1178:        config.get("minimum_mapping_evidence_turns", 2)
+  src\speaker\phase7.py:1179:    )
+  src\speaker\phase7.py:1180:    minimum_dominance = float(
+> src\speaker\phase7.py:1181:        config.get("minimum_mapping_dominance", 0.70)
+  src\speaker\phase7.py:1182:    )
+  src\speaker\phase7.py:1183:    minimum_relative_margin = float(
+> src\speaker\phase7.py:1184:        config.get("minimum_mapping_relative_margin", 0.20)
+  src\speaker\phase7.py:1185:    )
+  src\speaker\phase7.py:1186:    strong_conflict_score = float(
+  src\speaker\phase7.py:1187:        config.get("strong_conflict_score", 0.85)
+  src\speaker\phase7.py:1188:    )
+> src\speaker\phase7.py:1189:    minimum_candidate_margin = float(
+> src\speaker\phase7.py:1190:        config.get("minimum_candidate_margin", 0.03)
+  src\speaker\phase7.py:1191:    )
+  src\speaker\phase7.py:1192:
+  src\speaker\phase7.py:1193:    matches = []
+  src\speaker\phase7.py:1194:    motion_cache = {}
+  src\speaker\phase7.py:1211:            matches.append({
+  src\speaker\phase7.py:1212:                **turn,
+> src\speaker\phase7.py:1213:                "character_id": unknown_label,
+> src\speaker\phase7.py:1214:                "visual_character_id": unknown_label,
+> src\speaker\phase7.py:1215:                "final_character_id": unknown_label,
+> src\speaker\phase7.py:1216:                "matched_track_id": None,
+  src\speaker\phase7.py:1217:                "match_score": 0.0,
+  src\speaker\phase7.py:1218:                "score_margin": 0.0,
+  src\speaker\phase7.py:1219:                "decision": "unknown_speaker",
+> src\speaker\phase7.py:1220:                "candidates": [],
+  src\speaker\phase7.py:1221:            })
+  src\speaker\phase7.py:1222:            continue
+  src\speaker\phase7.py:1223:
+> src\speaker\phase7.py:1224:        candidates = []
+  src\speaker\phase7.py:1225:
+  src\speaker\phase7.py:1226:        for track in tracks:
+  src\speaker\phase7.py:1227:            track_conf = max(
+  src\speaker\phase7.py:1228:                0.0,
+  src\speaker\phase7.py:1244:            cache_key = (
+  src\speaker\phase7.py:1245:                turn["turn_id"],
+> src\speaker\phase7.py:1246:                track["track_id"],
+  src\speaker\phase7.py:1247:            )
+  src\speaker\phase7.py:1248:
+  src\speaker\phase7.py:1249:            if cache_key not in motion_cache:
+  src\speaker\phase7.py:1250:                motion_cache[cache_key] = compute_mouth_motion(
+  src\speaker\phase7.py:1260:            motion_result = motion_cache[cache_key]
+  src\speaker\phase7.py:1261:
+> src\speaker\phase7.py:1262:            candidates.append({
+> src\speaker\phase7.py:1263:                "track_id": track["track_id"],
+> src\speaker\phase7.py:1264:                "existing_character_id": track["identity"],
+> src\speaker\phase7.py:1265:                "temporal_overlap": round(float(temporal), 4),
+  src\speaker\phase7.py:1266:                "track_confidence": round(float(track_conf), 4),
+  src\speaker\phase7.py:1267:                "motion_score": round(
+  src\speaker\phase7.py:1268:                    float(motion_result["motion_score"]),
+  src\speaker\phase7.py:1269:                    6,
+  src\speaker\phase7.py:1277:            })
+  src\speaker\phase7.py:1278:
+> src\speaker\phase7.py:1279:        if not candidates:
+  src\speaker\phase7.py:1280:            matches.append({
+  src\speaker\phase7.py:1281:                **turn,
+> src\speaker\phase7.py:1282:                "character_id": unknown_label,
+> src\speaker\phase7.py:1283:                "visual_character_id": unknown_label,
+> src\speaker\phase7.py:1284:                "final_character_id": unknown_label,
+> src\speaker\phase7.py:1285:                "matched_track_id": None,
+  src\speaker\phase7.py:1286:                "match_score": 0.0,
+  src\speaker\phase7.py:1287:                "score_margin": 0.0,
+> src\speaker\phase7.py:1288:                "decision": "no_candidate_track",
+> src\speaker\phase7.py:1289:                "candidates": [],
+  src\speaker\phase7.py:1290:            })
+  src\speaker\phase7.py:1291:            continue
+  src\speaker\phase7.py:1292:
+  src\speaker\phase7.py:1293:        # Normalize only motion values that are available.
+  src\speaker\phase7.py:1294:        available_motion_indices = [
+  src\speaker\phase7.py:1295:            index
+> src\speaker\phase7.py:1296:            for index, candidate in enumerate(candidates)
+> src\speaker\phase7.py:1297:            if candidate["motion_available"]
+  src\speaker\phase7.py:1298:        ]
+  src\speaker\phase7.py:1299:
+  src\speaker\phase7.py:1300:        raw_motion = [
+> src\speaker\phase7.py:1301:            candidates[index]["motion_score"]
+  src\speaker\phase7.py:1302:            for index in available_motion_indices
+  src\speaker\phase7.py:1303:        ]
+  src\speaker\phase7.py:1304:
+  src\speaker\phase7.py:1305:        normalized_motion = minmax_normalize(raw_motion)
+  src\speaker\phase7.py:1310:        }
+  src\speaker\phase7.py:1311:
+> src\speaker\phase7.py:1312:        for index, candidate in enumerate(candidates):
+> src\speaker\phase7.py:1313:            if candidate["motion_available"]:
+  src\speaker\phase7.py:1314:                motion_component = motion_by_index[index]
+  src\speaker\phase7.py:1315:
+  src\speaker\phase7.py:1316:                score = (
+> src\speaker\phase7.py:1317:                    0.45 * candidate["temporal_overlap"]
+> src\speaker\phase7.py:1318:                    + 0.25 * candidate["track_confidence"]
+  src\speaker\phase7.py:1319:                    + 0.30 * motion_component
+  src\speaker\phase7.py:1320:                )
+  src\speaker\phase7.py:1321:            else:
+  src\speaker\phase7.py:1322:                score = (
+> src\speaker\phase7.py:1323:                    0.65 * candidate["temporal_overlap"]
+> src\speaker\phase7.py:1324:                    + 0.35 * candidate["track_confidence"]
+  src\speaker\phase7.py:1325:                )
+  src\speaker\phase7.py:1326:
+> src\speaker\phase7.py:1327:            candidate["match_score"] = round(
+  src\speaker\phase7.py:1328:                float(score),
+  src\speaker\phase7.py:1329:                4,
+  src\speaker\phase7.py:1330:            )
+  src\speaker\phase7.py:1331:
+> src\speaker\phase7.py:1332:        candidates.sort(
+> src\speaker\phase7.py:1333:            key=lambda candidate: candidate["match_score"],
+  src\speaker\phase7.py:1334:            reverse=True,
+  src\speaker\phase7.py:1335:        )
+  src\speaker\phase7.py:1336:
+> src\speaker\phase7.py:1337:        best = candidates[0]
+  src\speaker\phase7.py:1338:        second_score = (
+> src\speaker\phase7.py:1339:            candidates[1]["match_score"]
+> src\speaker\phase7.py:1340:            if len(candidates) > 1
+  src\speaker\phase7.py:1341:            else 0.0
+  src\speaker\phase7.py:1342:        )
+  src\speaker\phase7.py:1343:
+  src\speaker\phase7.py:1344:        margin = best["match_score"] - second_score
+  src\speaker\phase7.py:1347:            best["match_score"] >= min_score
+  src\speaker\phase7.py:1348:            and (
+> src\speaker\phase7.py:1349:                len(candidates) == 1
+> src\speaker\phase7.py:1350:                or margin >= minimum_candidate_margin
+  src\speaker\phase7.py:1351:            )
+  src\speaker\phase7.py:1352:        )
+  src\speaker\phase7.py:1353:
+  src\speaker\phase7.py:1354:        if accepted:
+> src\speaker\phase7.py:1355:            visual_character = best["existing_character_id"]
+  src\speaker\phase7.py:1356:
+> src\speaker\phase7.py:1357:            if not valid_character_id(
+  src\speaker\phase7.py:1358:                visual_character,
+  src\speaker\phase7.py:1359:                unknown_label,
+  src\speaker\phase7.py:1360:            ):
+> src\speaker\phase7.py:1361:                visual_character = derive_character_id(
+> src\speaker\phase7.py:1362:                    best["track_id"]
+  src\speaker\phase7.py:1363:                )
+  src\speaker\phase7.py:1364:
+  src\speaker\phase7.py:1365:            decision = "matched"
+> src\speaker\phase7.py:1366:            matched_track_id = best["track_id"]
+  src\speaker\phase7.py:1367:        else:
+  src\speaker\phase7.py:1368:            visual_character = unknown_label
+  src\speaker\phase7.py:1369:            decision = "low_confidence_or_ambiguous"
+> src\speaker\phase7.py:1370:            matched_track_id = None
+  src\speaker\phase7.py:1371:
+  src\speaker\phase7.py:1372:        matches.append({
+  src\speaker\phase7.py:1373:            **turn,
+> src\speaker\phase7.py:1374:            "character_id": visual_character,
+> src\speaker\phase7.py:1375:            "visual_character_id": visual_character,
+> src\speaker\phase7.py:1376:            "final_character_id": visual_character,
+> src\speaker\phase7.py:1377:            "matched_track_id": matched_track_id,
+  src\speaker\phase7.py:1378:            "match_score": best["match_score"],
+  src\speaker\phase7.py:1379:            "score_margin": round(float(margin), 4),
+  src\speaker\phase7.py:1380:            "decision": decision,
+> src\speaker\phase7.py:1381:            "candidates": candidates,
+  src\speaker\phase7.py:1382:        })
+  src\speaker\phase7.py:1383:
+  src\speaker\phase7.py:1384:    # =====================================================
+  src\speaker\phase7.py:1385:    # 8. SPEAKER-TO-CHARACTER CONSISTENCY
+  src\speaker\phase7.py:1387:
+  src\speaker\phase7.py:1388:    (
+> src\speaker\phase7.py:1389:        accepted_speaker_mapping,
+> src\speaker\phase7.py:1390:        speaker_mapping,
+  src\speaker\phase7.py:1391:        speaker_turn_counts,
+> src\speaker\phase7.py:1392:    ) = build_speaker_mapping(
+  src\speaker\phase7.py:1393:        matches=matches,
+  src\speaker\phase7.py:1394:        min_score=min_score,
+  src\speaker\phase7.py:1395:        unknown_label=unknown_label,
+  src\speaker\phase7.py:1396:        minimum_evidence_turns=minimum_evidence_turns,
+  src\speaker\phase7.py:1399:    )
+  src\speaker\phase7.py:1400:
+> src\speaker\phase7.py:1401:    # Apply only accepted mappings. Keep the original visual assignment
+> src\speaker\phase7.py:1402:    # in visual_character_id so the result remains auditable.
+  src\speaker\phase7.py:1403:    for match in matches:
+  src\speaker\phase7.py:1404:        speaker = str(match["speaker"])
+> src\speaker\phase7.py:1405:        mapped_character = accepted_speaker_mapping.get(speaker)
+  src\speaker\phase7.py:1406:
+  src\speaker\phase7.py:1407:        if mapped_character is None:
+  src\speaker\phase7.py:1408:            continue
+  src\speaker\phase7.py:1409:
+  src\speaker\phase7.py:1410:        visual_character = str(
+> src\speaker\phase7.py:1411:            match.get("visual_character_id", unknown_label)
+  src\speaker\phase7.py:1412:        )
+  src\speaker\phase7.py:1413:
+  src\speaker\phase7.py:1414:        if visual_character == mapped_character:
+> src\speaker\phase7.py:1415:            match["final_character_id"] = mapped_character
+> src\speaker\phase7.py:1416:            match["character_id"] = mapped_character
+  src\speaker\phase7.py:1417:            continue
+  src\speaker\phase7.py:1418:
+  src\speaker\phase7.py:1419:        current_score = float(
+  src\speaker\phase7.py:1420:            match.get("match_score", 0.0)
+  src\speaker\phase7.py:1423:        # Preserve strong contradictory visual evidence for review.
+  src\speaker\phase7.py:1424:        if (
+> src\speaker\phase7.py:1425:            valid_character_id(visual_character, unknown_label)
+  src\speaker\phase7.py:1426:            and current_score >= strong_conflict_score
+  src\speaker\phase7.py:1427:        ):
+  src\speaker\phase7.py:1428:            match["identity_consistency_flag"] = (
+  src\speaker\phase7.py:1429:                "strong_conflict_review"
+  src\speaker\phase7.py:1430:            )
+> src\speaker\phase7.py:1431:            match["suggested_character_id"] = mapped_character
+> src\speaker\phase7.py:1432:            match["final_character_id"] = visual_character
+> src\speaker\phase7.py:1433:            match["character_id"] = visual_character
+  src\speaker\phase7.py:1434:            continue
+  src\speaker\phase7.py:1435:
+> src\speaker\phase7.py:1436:        # Record the old assignment before applying the speaker mapping.
+> src\speaker\phase7.py:1437:        match["raw_character_id"] = visual_character
+> src\speaker\phase7.py:1438:        match["raw_matched_track_id"] = match.get("matched_track_id")
+  src\speaker\phase7.py:1439:
+> src\speaker\phase7.py:1440:        match["character_id"] = mapped_character
+> src\speaker\phase7.py:1441:        match["final_character_id"] = mapped_character
+> src\speaker\phase7.py:1442:        match["decision"] = "speaker_mapping_corrected"
+  src\speaker\phase7.py:1443:        match["identity_consistency_flag"] = (
+  src\speaker\phase7.py:1444:            "corrected_from_repeated_evidence"
+  src\speaker\phase7.py:1445:        )
+> src\speaker\phase7.py:1446:        match["suggested_character_id"] = mapped_character
+  src\speaker\phase7.py:1447:
+  src\speaker\phase7.py:1448:    # =====================================================
+  src\speaker\phase7.py:1449:    # 9. METRICS
+  src\speaker\phase7.py:1450:    # =====================================================
+  src\speaker\phase7.py:1455:        1
+  src\speaker\phase7.py:1456:        for match in matches
+> src\speaker\phase7.py:1457:        if valid_character_id(
+> src\speaker\phase7.py:1458:            match.get("final_character_id"),
+  src\speaker\phase7.py:1459:            unknown_label,
+  src\speaker\phase7.py:1460:        )
+  src\speaker\phase7.py:1461:    )
+  src\speaker\phase7.py:1462:
+  src\speaker\phase7.py:1464:        1
+  src\speaker\phase7.py:1465:        for match in matches
+> src\speaker\phase7.py:1466:        if match.get("decision") == "speaker_mapping_corrected"
+  src\speaker\phase7.py:1467:    )
+  src\speaker\phase7.py:1468:
+  src\speaker\phase7.py:1469:    conflict_review_turns = sum(
+  src\speaker\phase7.py:1470:        1
+  src\speaker\phase7.py:1476:    )
+  src\speaker\phase7.py:1477:
+> src\speaker\phase7.py:1478:    accepted_mapping_count = sum(
+  src\speaker\phase7.py:1479:        1
+> src\speaker\phase7.py:1480:        for item in speaker_mapping
+> src\speaker\phase7.py:1481:        if item.get("mapping_accepted")
+  src\speaker\phase7.py:1482:    )
+  src\speaker\phase7.py:1483:
+  src\speaker\phase7.py:1484:    unknown_turns = total_turns - matched_turns
+  src\speaker\phase7.py:1485:
+  src\speaker\phase7.py:1510:        "num_unknown_turns": unknown_turns,
+  src\speaker\phase7.py:1511:        "match_rate": round(match_rate, 4),
+> src\speaker\phase7.py:1512:        "accepted_speaker_mappings": accepted_mapping_count,
+  src\speaker\phase7.py:1513:        "corrected_turns": corrected_turns,
+  src\speaker\phase7.py:1514:        "strong_conflict_review_turns": conflict_review_turns,
+> src\speaker\phase7.py:1515:        "speaker_mapping": speaker_mapping,
+  src\speaker\phase7.py:1516:        "turn_matches": matches,
+  src\speaker\phase7.py:1517:        "runtime_seconds": round(runtime, 3),
+  src\speaker\phase7.py:1518:        "ground_truth_evaluated": False,
+  src\speaker\phase7.py:1519:        "limitations": [
+  src\speaker\phase7.py:1539:            ),
+  src\speaker\phase7.py:1540:            (
+> src\speaker\phase7.py:1541:                "visual_character_id preserves the original "
+  src\speaker\phase7.py:1542:                "visual-track assignment."
+  src\speaker\phase7.py:1543:            ),
+  src\speaker\phase7.py:1544:            (
+> src\speaker\phase7.py:1545:                "final_character_id and character_id represent "
+  src\speaker\phase7.py:1546:                "the final speaker-level assignment."
+  src\speaker\phase7.py:1547:            ),
+  src\speaker\phase7.py:1548:            (
+> src\speaker\phase7.py:1549:                "raw_character_id and raw_matched_track_id preserve "
+  src\speaker\phase7.py:1550:                "the original assignment when a correction is made."
+  src\speaker\phase7.py:1551:            ),
+  src\speaker\phase7.py:1552:            (
+  src\speaker\phase7.py:1553:                "A corrected speaker identity does not mean the "
+  src\speaker\phase7.py:1569:        "num_unknown_turns": unknown_turns,
+  src\speaker\phase7.py:1570:        "match_rate": round(match_rate, 4),
+> src\speaker\phase7.py:1571:        "accepted_speaker_mappings": accepted_mapping_count,
+  src\speaker\phase7.py:1572:        "corrected_turns": corrected_turns,
+  src\speaker\phase7.py:1573:        "strong_conflict_review_turns": conflict_review_turns,
+  src\speaker\phase7.py:1574:        "runtime_seconds": round(runtime, 3),
+  src\speaker\phase7.py:1575:        "ground_truth_evaluated": False,
+  src\speaker\phase7.py:1598:    )
+  src\speaker\phase7.py:1599:    LOGGER.info(
+> src\speaker\phase7.py:1600:        "Accepted speaker mappings: %d",
+> src\speaker\phase7.py:1601:        accepted_mapping_count,
+  src\speaker\phase7.py:1602:    )
+  src\speaker\phase7.py:1603:    LOGGER.info(
+  src\speaker\phase7.py:1604:        "Corrected turns: %d",
+  src\speaker\phase7.py:1605:        corrected_turns,
+  src\speaker\phase7.py:1620:# =========================================================
+  src\speaker\phase7.py:1621:
+> src\speaker\phase7.py:1622:def main() -> None:
+  src\speaker\phase7.py:1623:    parser = argparse.ArgumentParser(
+  src\speaker\phase7.py:1624:        description=(
+  src\speaker\phase7.py:1625:            "Phase 7: Active speaker to face-track matching"
+  src\speaker\phase7.py:1626:        )
+

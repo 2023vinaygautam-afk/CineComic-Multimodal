@@ -1,0 +1,16 @@
+
+data_dir: data
+output_dir: data/layout
+
+phase10:
+  panels_per_page: 5
+  panel_aspect_ratio: 1.35
+  grid_steps: 12
+  speaker_weight: 5.0
+  time_tolerance_s: 0.75
+
+  target_page_width: 1200
+  target_panel_height: 360
+
+  save_panel_images: true
+  save_contact_sheet: true

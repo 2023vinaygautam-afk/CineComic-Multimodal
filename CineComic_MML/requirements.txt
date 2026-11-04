@@ -1,0 +1,18 @@
+# Phase 0/1 dependencies. After your first successful install run
+# `pip freeze > requirements.lock.txt` and keep that file for exact reproducibility.
+
+# System tools (not pip): FFmpeg + ffprobe must be on PATH.
+
+PyYAML>=6.0,<7
+numpy>=1.26,<2
+opencv-python>=4.8,<5
+yt-dlp>=2024.1.1
+pytest>=8.0,<10
+faster-whisper>=1.0
+jiwer>=3.0
+srt>=3.5
+opencv-python>=4.8
+scenedetect[opencv]>=0.6.2
+imagehash>=4.3
+Pillow
+pytest

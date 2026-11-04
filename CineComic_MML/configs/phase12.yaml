@@ -1,0 +1,38 @@
+# Phase 12: Dialogue-aware comic assembly and export
+# Key names must match DEFAULTS in src/comic/phase12.py
+
+transcript_dir: data/subtitles
+keyframes_dir: data/keyframes
+layout_dir: data/layout
+speaker_dir: data/speaker
+emotion_dir: data/emotions
+styled_dir: data/outputs
+output_dir: output
+
+# Bubble appearance
+bubble_margin: 18
+bubble_padding: 12
+bubble_max_width_ratio: 0.75
+bubble_max_height_ratio: 0.40
+bubble_font_size: 22
+bubble_min_font_size: 13
+bubble_fill: "#fffdf7"
+bubble_outline: "#171717"
+bubble_text: "#111111"
+panel_border_width: 3
+
+# Page layout
+page_width: 1200
+page_height: 1600
+page_margin: 28
+panel_gap: 18
+
+# Dialogue assignment
+max_bubbles_per_panel: 2
+allow_duplicate_segments: false
+fallback_nearest_segment_seconds: 3.0
+
+# Export formats
+export_pdf: true
+export_cbz: true
+export_html: true

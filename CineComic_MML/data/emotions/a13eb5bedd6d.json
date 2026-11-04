@@ -1,0 +1,670 @@
+{
+  "video_id": "a13eb5bedd6d",
+  "phase": 9,
+  "stage": "emotion_fusion",
+  "weights": {
+    "text": 0.45,
+    "audio": 0.3,
+    "face": 0.25
+  },
+  "num_segments": 11,
+  "segments": [
+    {
+      "segment_id": 1,
+      "start": 8.21,
+      "end": 11.43,
+      "text": {
+        "label": "neutral",
+        "p": 0.8803,
+        "probs": {
+          "anger": 0.0148,
+          "disgust": 0.0305,
+          "fear": 0.0184,
+          "joy": 0.0037,
+          "neutral": 0.8803,
+          "sadness": 0.0101,
+          "surprise": 0.0423
+        }
+      },
+      "audio": {
+        "label": "sadness",
+        "p": 0.4202,
+        "probs": {
+          "anger": 0.2926,
+          "disgust": 0.0,
+          "fear": 0.0,
+          "joy": 0.2235,
+          "neutral": 0.0637,
+          "sadness": 0.4202,
+          "surprise": 0.0
+        }
+      },
+      "face": {
+        "label": "sadness",
+        "p": 0.5932,
+        "probs": {
+          "anger": 0.0288,
+          "disgust": 0.0,
+          "fear": 0.0178,
+          "joy": 0.0517,
+          "neutral": 0.3042,
+          "sadness": 0.5932,
+          "surprise": 0.0043
+        }
+      },
+      "fused": {
+        "label": "neutral",
+        "conf": 0.4913,
+        "modalities": [
+          "text",
+          "audio",
+          "face"
+        ],
+        "probs": {
+          "anger": 0.1016,
+          "disgust": 0.0137,
+          "fear": 0.0127,
+          "joy": 0.0816,
+          "neutral": 0.4913,
+          "sadness": 0.2789,
+          "surprise": 0.0201
+        }
+      }
+    },
+    {
+      "segment_id": 2,
+      "start": 11.43,
+      "end": 14.51,
+      "text": {
+        "label": "joy",
+        "p": 0.3592,
+        "probs": {
+          "anger": 0.018,
+          "disgust": 0.0106,
+          "fear": 0.032,
+          "joy": 0.3592,
+          "neutral": 0.2302,
+          "sadness": 0.1387,
+          "surprise": 0.2114
+        }
+      },
+      "audio": {
+        "label": "anger",
+        "p": 0.8968,
+        "probs": {
+          "anger": 0.8968,
+          "disgust": 0.0,
+          "fear": 0.0,
+          "joy": 0.0637,
+          "neutral": 0.0395,
+          "sadness": 0.0,
+          "surprise": 0.0
+        }
+      },
+      "face": {
+        "label": "sadness",
+        "p": 0.4173,
+        "probs": {
+          "anger": 0.0613,
+          "disgust": 0.0,
+          "fear": 0.047,
+          "joy": 0.0403,
+          "neutral": 0.3755,
+          "sadness": 0.4173,
+          "surprise": 0.0586
+        }
+      },
+      "fused": {
+        "label": "anger",
+        "conf": 0.2925,
+        "modalities": [
+          "text",
+          "audio",
+          "face"
+        ],
+        "probs": {
+          "anger": 0.2925,
+          "disgust": 0.0048,
+          "fear": 0.0261,
+          "joy": 0.1908,
+          "neutral": 0.2093,
+          "sadness": 0.1667,
+          "surprise": 0.1098
+        }
+      }
+    },
+    {
+      "segment_id": 3,
+      "start": 66.59,
+      "end": 67.15,
+      "text": {
+        "label": "neutral",
+        "p": 0.9142,
+        "probs": {
+          "anger": 0.0095,
+          "disgust": 0.0122,
+          "fear": 0.0035,
+          "joy": 0.0078,
+          "neutral": 0.9142,
+          "sadness": 0.0304,
+          "surprise": 0.0224
+        }
+      },
+      "audio": {
+        "label": "joy",
+        "p": 0.8275,
+        "probs": {
+          "anger": 0.1421,
+          "disgust": 0.0,
+          "fear": 0.0,
+          "joy": 0.8275,
+          "neutral": 0.0035,
+          "sadness": 0.0269,
+          "surprise": 0.0
+        }
+      },
+      "face": {
+        "label": "neutral",
+        "p": 0.5032,
+        "probs": {
+          "anger": 0.0,
+          "disgust": 0.0,
+          "fear": 0.0071,
+          "joy": 0.4522,
+          "neutral": 0.5032,
+          "sadness": 0.0265,
+          "surprise": 0.0108
+        }
+      },
+      "fused": {
+        "label": "neutral",
+        "conf": 0.5383,
+        "modalities": [
+          "text",
+          "audio",
+          "face"
+        ],
+        "probs": {
+          "anger": 0.0469,
+          "disgust": 0.0055,
+          "fear": 0.0034,
+          "joy": 0.3648,
+          "neutral": 0.5383,
+          "sadness": 0.0284,
+          "surprise": 0.0128
+        }
+      }
+    },
+    {
+      "segment_id": 4,
+      "start": 67.73,
+      "end": 69.07,
+      "text": {
+        "label": "surprise",
+        "p": 0.6729,
+        "probs": {
+          "anger": 0.1861,
+          "disgust": 0.0617,
+          "fear": 0.0104,
+          "joy": 0.0065,
+          "neutral": 0.0452,
+          "sadness": 0.0172,
+          "surprise": 0.6729
+        }
+      },
+      "audio": {
+        "label": "sadness",
+        "p": 0.9178,
+        "probs": {
+          "anger": 0.0226,
+          "disgust": 0.0,
+          "fear": 0.0,
+          "joy": 0.0469,
+          "neutral": 0.0127,
+          "sadness": 0.9178,
+          "surprise": 0.0
+        }
+      },
+      "face": {
+        "label": "joy",
+        "p": 0.5631,
+        "probs": {
+          "anger": 0.0,
+          "disgust": 0.0,
+          "fear": 0.0073,
+          "joy": 0.5631,
+          "neutral": 0.4064,
+          "sadness": 0.0144,
+          "surprise": 0.0087
+        }
+      },
+      "fused": {
+        "label": "surprise",
+        "conf": 0.305,
+        "modalities": [
+          "text",
+          "audio",
+          "face"
+        ],
+        "probs": {
+          "anger": 0.0905,
+          "disgust": 0.0278,
+          "fear": 0.0065,
+          "joy": 0.1578,
+          "neutral": 0.1258,
+          "sadness": 0.2867,
+          "surprise": 0.305
+        }
+      }
+    },
+    {
+      "segment_id": 5,
+      "start": 69.39,
+      "end": 70.55,
+      "text": {
+        "label": "neutral",
+        "p": 0.6017,
+        "probs": {
+          "anger": 0.1545,
+          "disgust": 0.0438,
+          "fear": 0.0175,
+          "joy": 0.0039,
+          "neutral": 0.6017,
+          "sadness": 0.1596,
+          "surprise": 0.0189
+        }
+      },
+      "audio": {
+        "label": "joy",
+        "p": 0.6397,
+        "probs": {
+          "anger": 0.3324,
+          "disgust": 0.0,
+          "fear": 0.0,
+          "joy": 0.6397,
+          "neutral": 0.0272,
+          "sadness": 0.0008,
+          "surprise": 0.0
+        }
+      },
+      "face": {
+        "label": "neutral",
+        "p": 0.451,
+        "probs": {
+          "anger": 0.051,
+          "disgust": 0.0,
+          "fear": 0.0232,
+          "joy": 0.2783,
+          "neutral": 0.451,
+          "sadness": 0.1965,
+          "surprise": 0.0
+        }
+      },
+      "fused": {
+        "label": "neutral",
+        "conf": 0.3917,
+        "modalities": [
+          "text",
+          "audio",
+          "face"
+        ],
+        "probs": {
+          "anger": 0.182,
+          "disgust": 0.0197,
+          "fear": 0.0137,
+          "joy": 0.2632,
+          "neutral": 0.3917,
+          "sadness": 0.1212,
+          "surprise": 0.0085
+        }
+      }
+    },
+    {
+      "segment_id": 6,
+      "start": 70.55,
+      "end": 72.69,
+      "text": {
+        "label": "neutral",
+        "p": 0.8794,
+        "probs": {
+          "anger": 0.0603,
+          "disgust": 0.0118,
+          "fear": 0.0086,
+          "joy": 0.0135,
+          "neutral": 0.8794,
+          "sadness": 0.0078,
+          "surprise": 0.0187
+        }
+      },
+      "audio": {
+        "label": "sadness",
+        "p": 0.6778,
+        "probs": {
+          "anger": 0.0221,
+          "disgust": 0.0,
+          "fear": 0.0,
+          "joy": 0.1842,
+          "neutral": 0.1159,
+          "sadness": 0.6778,
+          "surprise": 0.0
+        }
+      },
+      "face": {
+        "label": "sadness",
+        "p": 0.5748,
+        "probs": {
+          "anger": 0.0294,
+          "disgust": 0.0,
+          "fear": 0.0274,
+          "joy": 0.1067,
+          "neutral": 0.2618,
+          "sadness": 0.5748,
+          "surprise": 0.0
+        }
+      },
+      "fused": {
+        "label": "neutral",
+        "conf": 0.4959,
+        "modalities": [
+          "text",
+          "audio",
+          "face"
+        ],
+        "probs": {
+          "anger": 0.0411,
+          "disgust": 0.0053,
+          "fear": 0.0107,
+          "joy": 0.088,
+          "neutral": 0.4959,
+          "sadness": 0.3505,
+          "surprise": 0.0084
+        }
+      }
+    },
+    {
+      "segment_id": 7,
+      "start": 72.69,
+      "end": 73.55,
+      "text": {
+        "label": "neutral",
+        "p": 0.9338,
+        "probs": {
+          "anger": 0.0123,
+          "disgust": 0.0115,
+          "fear": 0.0041,
+          "joy": 0.0033,
+          "neutral": 0.9338,
+          "sadness": 0.0148,
+          "surprise": 0.0203
+        }
+      },
+      "audio": {
+        "label": "neutral",
+        "p": 0.966,
+        "probs": {
+          "anger": 0.0,
+          "disgust": 0.0,
+          "fear": 0.0,
+          "joy": 0.0191,
+          "neutral": 0.966,
+          "sadness": 0.0148,
+          "surprise": 0.0
+        }
+      },
+      "face": {
+        "label": "sadness",
+        "p": 0.3957,
+        "probs": {
+          "anger": 0.1717,
+          "disgust": 0.0,
+          "fear": 0.1644,
+          "joy": 0.1401,
+          "neutral": 0.1281,
+          "sadness": 0.3957,
+          "surprise": 0.0
+        }
+      },
+      "fused": {
+        "label": "neutral",
+        "conf": 0.742,
+        "modalities": [
+          "text",
+          "audio",
+          "face"
+        ],
+        "probs": {
+          "anger": 0.0485,
+          "disgust": 0.0052,
+          "fear": 0.0429,
+          "joy": 0.0422,
+          "neutral": 0.742,
+          "sadness": 0.11,
+          "surprise": 0.0091
+        }
+      }
+    },
+    {
+      "segment_id": 8,
+      "start": 79.44,
+      "end": 80.24,
+      "text": {
+        "label": "anger",
+        "p": 0.9332,
+        "probs": {
+          "anger": 0.9332,
+          "disgust": 0.0103,
+          "fear": 0.0227,
+          "joy": 0.001,
+          "neutral": 0.0228,
+          "sadness": 0.009,
+          "surprise": 0.0009
+        }
+      },
+      "audio": {
+        "label": "joy",
+        "p": 0.6985,
+        "probs": {
+          "anger": 0.1087,
+          "disgust": 0.0,
+          "fear": 0.0,
+          "joy": 0.6985,
+          "neutral": 0.0116,
+          "sadness": 0.1812,
+          "surprise": 0.0
+        }
+      },
+      "face": {
+        "label": "sadness",
+        "p": 0.6017,
+        "probs": {
+          "anger": 0.0,
+          "disgust": 0.0,
+          "fear": 0.0624,
+          "joy": 0.0298,
+          "neutral": 0.0284,
+          "sadness": 0.6017,
+          "surprise": 0.2778
+        }
+      },
+      "fused": {
+        "label": "anger",
+        "conf": 0.4526,
+        "modalities": [
+          "text",
+          "audio",
+          "face"
+        ],
+        "probs": {
+          "anger": 0.4526,
+          "disgust": 0.0046,
+          "fear": 0.0258,
+          "joy": 0.2174,
+          "neutral": 0.0208,
+          "sadness": 0.2088,
+          "surprise": 0.0698
+        }
+      }
+    },
+    {
+      "segment_id": 9,
+      "start": 81.66,
+      "end": 82.52,
+      "text": {
+        "label": "neutral",
+        "p": 0.812,
+        "probs": {
+          "anger": 0.0309,
+          "disgust": 0.0085,
+          "fear": 0.0292,
+          "joy": 0.0904,
+          "neutral": 0.812,
+          "sadness": 0.0194,
+          "surprise": 0.0096
+        }
+      },
+      "audio": {
+        "label": "joy",
+        "p": 0.7589,
+        "probs": {
+          "anger": 0.0442,
+          "disgust": 0.0,
+          "fear": 0.0,
+          "joy": 0.7589,
+          "neutral": 0.1575,
+          "sadness": 0.0395,
+          "surprise": 0.0
+        }
+      },
+      "face": null,
+      "fused": {
+        "label": "neutral",
+        "conf": 0.5502,
+        "modalities": [
+          "text",
+          "audio"
+        ],
+        "probs": {
+          "anger": 0.0362,
+          "disgust": 0.0051,
+          "fear": 0.0175,
+          "joy": 0.3578,
+          "neutral": 0.5502,
+          "sadness": 0.0274,
+          "surprise": 0.0058
+        }
+      }
+    },
+    {
+      "segment_id": 10,
+      "start": 116.94,
+      "end": 118.06,
+      "text": {
+        "label": "anger",
+        "p": 0.9131,
+        "probs": {
+          "anger": 0.9131,
+          "disgust": 0.0572,
+          "fear": 0.0036,
+          "joy": 0.0008,
+          "neutral": 0.0171,
+          "sadness": 0.0072,
+          "surprise": 0.0009
+        }
+      },
+      "audio": {
+        "label": "joy",
+        "p": 0.603,
+        "probs": {
+          "anger": 0.0314,
+          "disgust": 0.0,
+          "fear": 0.0,
+          "joy": 0.603,
+          "neutral": 0.2275,
+          "sadness": 0.1381,
+          "surprise": 0.0
+        }
+      },
+      "face": null,
+      "fused": {
+        "label": "anger",
+        "conf": 0.5605,
+        "modalities": [
+          "text",
+          "audio"
+        ],
+        "probs": {
+          "anger": 0.5605,
+          "disgust": 0.0343,
+          "fear": 0.0022,
+          "joy": 0.2417,
+          "neutral": 0.1013,
+          "sadness": 0.0596,
+          "surprise": 0.0005
+        }
+      }
+    },
+    {
+      "segment_id": 11,
+      "start": 147.11,
+      "end": 148.23,
+      "text": {
+        "label": "joy",
+        "p": 0.698,
+        "probs": {
+          "anger": 0.0067,
+          "disgust": 0.0013,
+          "fear": 0.0012,
+          "joy": 0.698,
+          "neutral": 0.1198,
+          "sadness": 0.0073,
+          "surprise": 0.1658
+        }
+      },
+      "audio": {
+        "label": "anger",
+        "p": 0.7143,
+        "probs": {
+          "anger": 0.7143,
+          "disgust": 0.0,
+          "fear": 0.0,
+          "joy": 0.1425,
+          "neutral": 0.1426,
+          "sadness": 0.0006,
+          "surprise": 0.0
+        }
+      },
+      "face": {
+        "label": "sadness",
+        "p": 0.3432,
+        "probs": {
+          "anger": 0.2263,
+          "disgust": 0.0,
+          "fear": 0.0325,
+          "joy": 0.0599,
+          "neutral": 0.338,
+          "sadness": 0.3432,
+          "surprise": 0.0
+        }
+      },
+      "fused": {
+        "label": "joy",
+        "conf": 0.3718,
+        "modalities": [
+          "text",
+          "audio",
+          "face"
+        ],
+        "probs": {
+          "anger": 0.2739,
+          "disgust": 0.0006,
+          "fear": 0.0087,
+          "joy": 0.3718,
+          "neutral": 0.1812,
+          "sadness": 0.0893,
+          "surprise": 0.0746
+        }
+      }
+    }
+  ],
+  "created": "2026-11-04 10:16:22"
+}

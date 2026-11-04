@@ -1,0 +1,34 @@
+# Phase 9 - Multimodal Emotion Fusion configuration
+data_dir: data
+results_dir: results
+log_dir: logs
+seed: 42
+
+phase9:
+  text_model: "j-hartmann/emotion-english-distilroberta-base"
+  audio_model: "superb/wav2vec2-base-superb-er"
+  face_model: "dima806/facial_emotions_image_detection"
+
+  device: "cpu"
+
+  weights:
+    text: 0.45
+    audio: 0.30
+    face: 0.25
+
+  audio:
+    min_duration_s: 0.25
+    min_rms: 0.002
+    sample_rate: 16000
+
+  face:
+    min_face_size: 40
+    max_samples_per_segment: 4
+    margin: 0.15
+
+  output_template: "data/emotions/{video_id}.json"
+  metrics_template: "results/phase9/{video_id}_metrics.json"
+
+  gates:
+    min_coverage: 0.80
+    prob_sum_tolerance: 0.001
