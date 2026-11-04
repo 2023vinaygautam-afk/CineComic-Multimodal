@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .venv/
 venv/
 __pycache__/
@@ -8,3 +9,58 @@ __pycache__/
 !.env.example
 .vscode/
 .idea/
+=======
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+.venv/
+venv/
+env/
+
+# Secrets
+.env
+.env.*
+!.env.example
+*token*
+*secret*
+
+# Editors and operating system
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Python test and cache files
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Model caches and downloaded weights
+.cache/
+.huggingface/
+models/
+*.safetensors
+*.onnx
+*.pt
+*.pth
+*.ckpt
+
+# Large source videos and generated media
+data/Video/
+data/raw/
+data/audio/
+data/frames/
+data/subtitles/
+*.mp4
+*.mkv
+*.avi
+*.wav
+*.zip
+
+# Generated results and logs
+logs/
+*.log
+>>>>>>> 7949ab1e7a9597046a3bedcc98879d3be769cba6

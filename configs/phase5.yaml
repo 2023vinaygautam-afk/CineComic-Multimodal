@@ -1,0 +1,26 @@
+phase5:
+  detection:
+    model_name: buffalo_l
+    model_root: .insightface
+    det_size: [640, 640]
+    use_gpu: false
+    det_fps: 2
+    window_pad_s: 0.75
+    min_face_px: 18
+    min_det_score: 0.30
+    ref_px: 96
+
+  tracking:
+    max_gap_s: 1.5
+    iou_weight: 0.55
+    iou_min: 0.03
+    emb_gate: 0.62
+    emb_veto: 0.08
+    min_score: 0.25
+    ema: 0.35
+
+  identity:
+    cluster_threshold: 0.48
+    min_track_faces: 2
+    min_track_quality: 0.20
+    min_id_conf: 0.35

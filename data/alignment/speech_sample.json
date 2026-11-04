@@ -1,0 +1,148 @@
+{
+  "video_id": "speech_sample",
+  "stage": "phase6_clip_alignment",
+  "model": "ViT-B-32",
+  "pretrained": "laion2b_s34b_b79k",
+  "device": "cpu",
+  "num_segments": 2,
+  "num_unique_candidate_frames": 11,
+  "segments_without_candidates": 0,
+  "non_visual_threshold": 0.18,
+  "image_embeddings": "C:\\Users\\vinay\\OneDrive\\Documents\\Finance\\Test Cases\\NLP\\MML_Project\\CineComic_MML\\data\\embeddings\\clip_img_speech_sample.npy",
+  "text_embeddings": "C:\\Users\\vinay\\OneDrive\\Documents\\Finance\\Test Cases\\NLP\\MML_Project\\CineComic_MML\\data\\embeddings\\clip_txt_speech_sample.npy",
+  "alignment": [
+    {
+      "segment_id": "1",
+      "start": 0.0,
+      "end": 2.82,
+      "text": "Hello and welcome to the Cinecomic Pipeline.",
+      "candidates": [
+        {
+          "frame_id": "s00_f004",
+          "t": 1.92,
+          "shot_id": "0",
+          "clip_sim": 0.192045,
+          "z": 1.387044,
+          "rank": 1,
+          "image_embedding_index": 2
+        },
+        {
+          "frame_id": "s00_f005",
+          "t": 2.4,
+          "shot_id": "0",
+          "clip_sim": 0.190987,
+          "z": 0.908406,
+          "rank": 2,
+          "image_embedding_index": 3
+        },
+        {
+          "frame_id": "s00_f001",
+          "t": 0.48,
+          "shot_id": "0",
+          "clip_sim": 0.189609,
+          "z": 0.284518,
+          "rank": 3,
+          "image_embedding_index": 0
+        },
+        {
+          "frame_id": "s00_f007",
+          "t": 3.36,
+          "shot_id": "0",
+          "clip_sim": 0.188501,
+          "z": -0.216964,
+          "rank": 4,
+          "image_embedding_index": 5
+        },
+        {
+          "frame_id": "s00_f006",
+          "t": 2.88,
+          "shot_id": "0",
+          "clip_sim": 0.187268,
+          "z": -0.774675,
+          "rank": 5,
+          "image_embedding_index": 4
+        },
+        {
+          "frame_id": "s00_f002",
+          "t": 0.96,
+          "shot_id": "0",
+          "clip_sim": 0.185471,
+          "z": -1.588321,
+          "rank": 6,
+          "image_embedding_index": 1
+        }
+      ],
+      "best_similarity": 0.192045,
+      "non_visual": false,
+      "status": "ok"
+    },
+    {
+      "segment_id": "2",
+      "start": 3.36,
+      "end": 6.44,
+      "text": "This is a spoken test sample for the Ussur stage.",
+      "candidates": [
+        {
+          "frame_id": "s00_f010",
+          "t": 4.32,
+          "shot_id": "0",
+          "clip_sim": 0.22052,
+          "z": 1.032065,
+          "rank": 1,
+          "image_embedding_index": 7
+        },
+        {
+          "frame_id": "s00_f012",
+          "t": 5.28,
+          "shot_id": "0",
+          "clip_sim": 0.218971,
+          "z": 0.58862,
+          "rank": 2,
+          "image_embedding_index": 8
+        },
+        {
+          "frame_id": "s00_f006",
+          "t": 2.88,
+          "shot_id": "0",
+          "clip_sim": 0.218415,
+          "z": 0.429583,
+          "rank": 3,
+          "image_embedding_index": 4
+        },
+        {
+          "frame_id": "s00_f013",
+          "t": 5.76,
+          "shot_id": "0",
+          "clip_sim": 0.21769,
+          "z": 0.22216,
+          "rank": 4,
+          "image_embedding_index": 9
+        },
+        {
+          "frame_id": "s00_f009",
+          "t": 3.84,
+          "shot_id": "0",
+          "clip_sim": 0.216233,
+          "z": -0.194794,
+          "rank": 5,
+          "image_embedding_index": 6
+        },
+        {
+          "frame_id": "s00_f015",
+          "t": 6.72,
+          "shot_id": "0",
+          "clip_sim": 0.209653,
+          "z": -2.077626,
+          "rank": 6,
+          "image_embedding_index": 10
+        }
+      ],
+      "best_similarity": 0.22052,
+      "non_visual": false,
+      "status": "ok"
+    }
+  ],
+  "runtime_seconds": 2.999,
+  "ground_truth_evaluated": false,
+  "note": "Similarity scores are ranking signals, not calibrated probabilities. The non_visual flag is a heuristic and requires validation against human relevance labels."
+}

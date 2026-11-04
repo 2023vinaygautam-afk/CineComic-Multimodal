@@ -1,0 +1,7 @@
+layout_dir: data/layout
+keyframes_dir: data/keyframes
+subtitle_dir: data/subtitles
+emotion_dir: data/emotions
+speaker_mapping_dir: data/speaker
+tracks_dir: data/tracks
+output_dir: output

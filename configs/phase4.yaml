@@ -1,0 +1,43 @@
+# Phase 4 settings for shot detection and frame pooling.
+# Tuned for simple synthetic validation and general real clips.
+
+data_dir: data
+results_dir: results
+log_dir: logs
+seed: 42
+
+phase4:
+  black_bar:
+    n_samples: 20
+    thresh: 16.0
+    min_keep_frac: 0.50
+
+  shots:
+    detector: content
+    threshold: 27.0
+    min_scene_len_s: 0.5
+
+  sampling:
+    fps: 2.0
+    window_pad_s: 0.75
+    min_per_segment: 3
+    max_candidates_per_segment: 6
+    jpeg_quality: 90
+
+  quality:
+    min_brightness: 30.0
+    blur_rel_thresh: 0.65
+    phash_hamming: 5
+    border_dark_thresh: 16.0
+
+  gate:
+    coverage: 0.70
+    max_black_border_rate: 0.80
+    boundary_f1: 0.20
+    boundary_tol_s: 0.50
+    crop_iou: 0.25
+
+  contact_sheet:
+    n_shots: 4
+    cols: 2
+    thumb_w: 220

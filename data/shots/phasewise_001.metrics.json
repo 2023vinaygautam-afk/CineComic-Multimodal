@@ -1,0 +1,18 @@
+{
+  "n_shots": 1,
+  "n_frames_kept": 7,
+  "stats_sampled": 9,
+  "stats_kept": 7,
+  "stats_backfilled": 0,
+  "stats_n_segments": 0,
+  "removed": {
+    "duplicate": 2
+  },
+  "pct_removed": 0.2222222222222222,
+  "pool_per_min": 140.0,
+  "black_border_rate": 0.14285714285714285,
+  "runtime_s": 0.0019941329956054688,
+  "passed": true,
+  "reason": "all gates passed",
+  "cfg": "0fd552b4"
+}

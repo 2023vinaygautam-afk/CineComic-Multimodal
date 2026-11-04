@@ -1,0 +1,102 @@
+{
+ "video_id": "phasewise_001",
+ "fps": 25.0,
+ "n_frames": 75,
+ "duration_s": 3.0,
+ "crop_box": [
+  0,
+  0,
+  320,
+  240
+ ],
+ "config_hash": "0fd552b4",
+ "shots": [
+  {
+   "shot_id": 0,
+   "start": 0.0,
+   "end": 3.0,
+   "frames": [
+    {
+     "frame_id": "s00_f000",
+     "idx": 0,
+     "t": 0.0,
+     "sharp": 1815.081,
+     "brightness": 127.683,
+     "phash": "81338dc537cc33dc",
+     "path": "data/frames/phasewise_001/shot_000/s00_f000.jpg",
+     "border_dark": true
+    },
+    {
+     "frame_id": "s00_f001",
+     "idx": 12,
+     "t": 0.48,
+     "sharp": 1924.192,
+     "brightness": 127.486,
+     "phash": "a8132dec13ec13fc",
+     "path": "data/frames/phasewise_001/shot_000/s00_f001.jpg",
+     "border_dark": false
+    },
+    {
+     "frame_id": "s00_f002",
+     "idx": 24,
+     "t": 0.96,
+     "sharp": 1956.431,
+     "brightness": 126.356,
+     "phash": "a2892f6699769176",
+     "path": "data/frames/phasewise_001/shot_000/s00_f002.jpg",
+     "border_dark": false
+    },
+    {
+     "frame_id": "s00_f005",
+     "idx": 48,
+     "t": 1.92,
+     "sharp": 1555.116,
+     "brightness": 124.767,
+     "phash": "aa81a5659f7c907c",
+     "path": "data/frames/phasewise_001/shot_000/s00_f005.jpg",
+     "border_dark": false
+    },
+    {
+     "frame_id": "s00_f006",
+     "idx": 60,
+     "t": 2.4,
+     "sharp": 1784.188,
+     "brightness": 126.057,
+     "phash": "a9832d7c937c827c",
+     "path": "data/frames/phasewise_001/shot_000/s00_f006.jpg",
+     "border_dark": false
+    },
+    {
+     "frame_id": "s00_f007",
+     "idx": 72,
+     "t": 2.88,
+     "sharp": 1803.467,
+     "brightness": 126.001,
+     "phash": "b9832f35937c8174",
+     "path": "data/frames/phasewise_001/shot_000/s00_f007.jpg",
+     "border_dark": false
+    },
+    {
+     "frame_id": "s00_f008",
+     "idx": 74,
+     "t": 2.96,
+     "sharp": 1799.995,
+     "brightness": 125.944,
+     "phash": "b3812f35897e8176",
+     "path": "data/frames/phasewise_001/shot_000/s00_f008.jpg",
+     "border_dark": false
+    }
+   ]
+  }
+ ],
+ "segment_candidates": {},
+ "stats": {
+  "sampled": 9,
+  "kept": 7,
+  "removed": {
+   "duplicate": 2
+  },
+  "backfilled": 0,
+  "n_segments": 0
+ }
+}
